@@ -1,0 +1,634 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Mail, 
+  Download, 
+  Briefcase, 
+  Award, 
+  BookOpen, 
+  Heart, 
+  ArrowRight, 
+  Menu, 
+  X, 
+  MapPin, 
+  Phone,
+  MessageCircle,
+  Database,
+  TrendingUp,
+  Sun,
+  Moon,
+  Sparkles,
+  Send
+} from 'lucide-react';
+import profileImage from './assets/suvadra.jpg';
+import cvFile from './assets/Suvadra_Kundu_CV.pptx.pdf';
+
+export default function App() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isFormSent, setIsFormSent] = useState(false);
+
+  // Navbar er scroll effect control korar jonno
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      },
+      { threshold: 0.15 }
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Smooth scroll er function
+  const scrollToSection = (e, id) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      const yOffset = -80; 
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+    setIsMobileMenuOpen(false); // Link a click korle mobile menu bondho hoye jabe
+  };
+
+  const theme = isDarkMode
+    ? {
+        bg: 'bg-[#081616]',
+        text: 'text-[#EAF1EF]',
+        mutedText: 'text-[#A6B8B4]',
+        sectionAlt: 'bg-[#102524]',
+        cardBg: 'bg-[#112928]',
+        softCard: 'bg-[#193433]',
+        primary: 'bg-[#D7720C]',
+        primaryText: 'text-[#F0A048]',
+        accent: 'text-[#9BB2AD]',
+        accentBg: 'bg-[#9BB2AD]',
+        borderAccent: 'border-[#436661]',
+        line: 'border-[#436661]/30',
+      }
+    : {
+        bg: 'bg-[#F5F4ED]',
+        text: 'text-[#0D2322]',
+        mutedText: 'text-[#738F8A]',
+        sectionAlt: 'bg-white',
+        cardBg: 'bg-white',
+        softCard: 'bg-[#F5F4ED]',
+        primary: 'bg-[#D7720C]',
+        primaryText: 'text-[#D7720C]',
+        accent: 'text-[#738F8A]',
+        accentBg: 'bg-[#738F8A]',
+        borderAccent: 'border-[#738F8A]',
+        line: 'border-[#738F8A]/20',
+      };
+  const quickStats = [
+    { label: 'Years of Experience', value: '8+' },
+    { label: 'Teams Trained', value: '20+' },
+    { label: 'Projects Coordinated', value: '150+' },
+  ];
+  const projects = [
+    {
+      title: 'Client Service Dashboard',
+      desc: 'Daily task tracking, client follow-up status, and shift-wise progress monitoring in one interface.',
+      stack: 'React, Excel Workflow, Reporting',
+    },
+    {
+      title: 'Training Session Planner',
+      desc: 'A structured planner for training modules, attendance, and assessment scheduling.',
+      stack: 'Program Design, Coordination, Documentation',
+    },
+    {
+      title: 'Digital Campaign Tracker',
+      desc: 'Simple campaign performance tracker for awareness and engagement-focused activities.',
+      stack: 'Meta Tools, Google Tools, Analytics',
+    },
+  ];
+  const skills = [
+    { name: 'Client Communication', value: 96 },
+    { name: 'Data Entry & Documentation', value: 94 },
+    { name: 'Task Scheduling & Management', value: 92 },
+    { name: 'Work Order Tracking', value: 90 },
+  ];
+  const coreCompetencies = [
+    'Client Communication',
+    'Data Entry & Documentation',
+    'Task Scheduling & Management',
+    'Work Order Tracking',
+    'Contractor Coordination',
+    'Effective Communication',
+    'Team Collaboration',
+    'Time Management',
+    'Attention to Detail',
+    'Problem Solving',
+    'Decision Making',
+  ];
+  const toolsAndTech = [
+    'MS Word & MS Excel',
+    'Google Workspace',
+    'Email & Calendar Management',
+    'Documentation & Reporting',
+  ];
+  const testimonials = [
+    {
+      quote: 'Suvadra consistently keeps communication clear and ensures every task is completed on time.',
+      author: 'Operations Supervisor',
+    },
+    {
+      quote: 'Her training sessions are structured, practical, and highly engaging for team members.',
+      author: 'Training Coordinator',
+    },
+  ];
+  const languages = [
+    { name: 'English', level: 'Fluent', value: 78 },
+    { name: 'Bangla', level: 'Fluent (Native)', value: 92 },
+    { name: 'Hindi', level: 'Proficient (Speaking & Listening)', value: 65 },
+  ];
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    setIsFormSent(true);
+    setTimeout(() => setIsFormSent(false), 3000);
+  };
+
+  return (
+    <div className={`min-h-screen ${theme.bg} ${theme.text} font-sans transition-colors duration-300 selection:bg-[#738F8A] selection:text-white`}>
+      
+      {/* Navigation Bar */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? `${isDarkMode ? 'bg-[#081616]/90' : 'bg-[#F5F4ED]/90'} backdrop-blur-md shadow-sm py-4` : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+          <div className="text-2xl font-bold tracking-tighter cursor-pointer" onClick={(e) => scrollToSection(e, 'home')}>
+            Suvadra<span className={theme.primaryText}>.</span>
+          </div>
+          
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center space-x-8 font-medium">
+            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Services</a>
+            <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Projects</a>
+            <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Experience</a>
+            <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Credentials</a>
+            <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Education</a>
+            <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Language</a>
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2.5 rounded-full border ${theme.line} hover:scale-105 transition`}>
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${theme.primary} text-white px-6 py-2.5 rounded-full hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg`}>
+              Get Started
+            </button>
+          </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+
+        {/* Mobile Nav Menu */}
+        {isMobileMenuOpen && (
+          <div className={`md:hidden absolute top-full left-0 w-full ${theme.bg} shadow-lg py-6 px-6 flex flex-col space-y-4 font-medium border-t ${theme.line}`}>
+            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="block hover:text-[#D7720C]">Services</a>
+            <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className="block hover:text-[#D7720C]">Projects</a>
+            <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className="block hover:text-[#D7720C]">Experience</a>
+            <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className="block hover:text-[#D7720C]">Credentials</a>
+            <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className="block hover:text-[#D7720C]">Education</a>
+            <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className="block hover:text-[#D7720C]">Language</a>
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-full py-2 rounded-xl border ${theme.line}`}>
+              {isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
+            </button>
+            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${theme.primary} text-white px-6 py-3 rounded-full w-full mt-4`}>
+              Get Started
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section id="home" data-reveal className="reveal relative overflow-hidden pt-32 pb-20 md:pt-48 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#D7720C]/10 blur-3xl"></div>
+        <div className="pointer-events-none absolute bottom-0 -left-24 h-72 w-72 rounded-full bg-[#738F8A]/20 blur-3xl"></div>
+        <div className="flex-1 space-y-8 text-center md:text-left">
+          <div className={`inline-block px-4 py-1.5 rounded-full border border-[#738F8A]/30 ${theme.accent} text-sm font-semibold tracking-wide uppercase`}>
+            Available for New Work
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
+            Suvadra <br className="hidden md:block"/> Kundu
+          </h1>
+          <h2 className={`text-xl md:text-2xl ${theme.accent} font-medium leading-relaxed max-w-2xl`}>
+            Professional Client Coordinator & Lead Trainer. <br/>
+            <span className="text-[#0D2322]">I transform complex data and daily operations into clear, people-first workflows that teams can trust.</span>
+          </h2>
+          <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center md:justify-start">
+            <a href="mailto:mailboxofsuvra@gmail.com" className={`${theme.primary} text-white px-8 py-4 rounded-full font-medium hover:bg-opacity-90 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto justify-center`}>
+              <Mail size={20} />
+              Get in Touch
+            </a>
+            
+            {/* Ekhane button er bodole anchor tag deya holo jate CV download hoy */}
+            <a 
+              href={cvFile} 
+              download="Suvadra_Kundu_CV.pptx.pdf" 
+              className={`bg-transparent border-2 border-[#0D2322] ${theme.text} px-8 py-4 rounded-full font-medium hover:bg-[#0D2322] hover:text-[#F5F4ED] transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
+            >
+              <Download size={20} />
+              Download CV
+            </a>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            {quickStats.map((item) => (
+              <div key={item.label} className="rounded-2xl border border-[#738F8A]/20 bg-white/70 backdrop-blur-sm p-4 text-left shadow-sm">
+                <p className="text-2xl font-extrabold tracking-tight">{item.value}</p>
+                <p className="text-sm text-[#738F8A]">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Hero Image Section */}
+        <div className="flex-1 flex justify-center md:justify-end">
+          <div className="relative w-72 h-72 md:w-96 md:h-96">
+            <div className={`absolute inset-0 ${theme.accentBg} rounded-full opacity-20 animate-pulse`}></div>
+            <div className={`absolute inset-4 border-2 ${theme.borderAccent} rounded-full`}></div>
+            <div className="absolute inset-6 rounded-full border border-[#D7720C]/40"></div>
+            <div className="absolute inset-8 bg-[#0D2322] rounded-full overflow-hidden shadow-2xl flex items-center justify-center">
+               {/* Jokhon apni eta apnar pc te run korben, nicher src ta change kore apnar "image.png" diye diben:
+                 <img src="image.png" alt="Suvadra Kundu" className="w-full h-full object-cover" />
+               */}
+               <img 
+                 src={profileImage} 
+                 alt="Suvadra Kundu" 
+                 className="w-full h-full object-cover"
+                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
+               />
+            </div>
+            {/* Decorative element */}
+            <div className={`absolute bottom-4 left-4 w-16 h-16 ${theme.primary} rounded-full flex items-center justify-center text-white shadow-lg`}>
+              <ArrowRight className="-rotate-45" size={28} />
+            </div>
+            <div className="absolute -top-2 right-2 rounded-full bg-white px-4 py-2 text-xs font-semibold shadow-md border border-[#738F8A]/20">
+              Open to projects
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" data-reveal className="reveal py-20 bg-[#0D2322] text-[#F5F4ED] px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16 md:flex justify-between items-end">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Professional Services</h2>
+              <p className="text-[#738F8A] text-lg">Delivering streamlined workflows and effective communication for complex organizational tasks.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "Client Coordination", icon: <MessageCircle size={32} />, desc: "Managing communications, task scheduling, and work order tracking." },
+              { title: "Instructional Training", icon: <Award size={32} />, desc: "Certified Lead Trainer (NSDA Level 4) for professional development." },
+              { title: "Data Management", icon: <Database size={32} />, desc: "Expert documentation and data entry using MS Word and MS Excel." },
+              { title: "Digital Marketing", icon: <TrendingUp size={32} />, desc: "Strategic growth using Facebook Blueprint and Google Digital Garage tools." }
+            ].map((service, idx) => (
+              <div key={idx} className="bg-[#1A3332] p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 border border-[#738F8A]/20 hover:border-[#D7720C] hover:shadow-xl">
+                <div className={`${theme.primaryText} mb-6`}>{service.icon}</div>
+                <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                <p className="text-[#738F8A] leading-relaxed">{service.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" data-reveal className={`reveal py-24 px-6 md:px-12 ${theme.sectionAlt}`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-12 flex items-center gap-3">
+            <Sparkles className={theme.primaryText} />
+            <h2 className="text-4xl md:text-5xl font-bold">Featured Projects</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {projects.map((project) => (
+              <article key={project.title} className={`${theme.cardBg} p-8 rounded-3xl border ${theme.line} shadow-sm hover:shadow-md transition`}>
+                <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
+                <p className={`${theme.mutedText} mb-4 leading-relaxed`}>{project.desc}</p>
+                <p className={`text-sm font-semibold ${theme.primaryText}`}>{project.stack}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm`}>
+            <h3 className="text-3xl font-bold mb-6">Core Skills</h3>
+            <div className="space-y-5">
+              {skills.map((skill) => (
+                <div key={skill.name}>
+                  <div className="flex justify-between mb-2 text-sm font-semibold">
+                    <span>{skill.name}</span>
+                    <span>{skill.value}%</span>
+                  </div>
+                  <div className={`h-2 rounded-full ${isDarkMode ? 'bg-[#193433]' : 'bg-[#E3E7E5]'}`}>
+                    <div className="h-2 rounded-full bg-[#D7720C]" style={{ width: `${skill.value}%` }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={`mt-8 rounded-2xl p-5 ${theme.softCard} border ${theme.line}`}>
+              <p className={`text-xs font-bold tracking-widest uppercase ${theme.primaryText}`}>Core Competencies</p>
+              <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {coreCompetencies.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#D7720C]"></span>
+                    <span className={theme.mutedText}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className={`mt-6 text-xs font-bold tracking-widest uppercase ${theme.primaryText}`}>Tools & Tech</p>
+              <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {toolsAndTech.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#D7720C]"></span>
+                    <span className={theme.mutedText}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm`}>
+            <h3 className="text-3xl font-bold mb-6">Testimonials</h3>
+            <div className="space-y-4">
+              {testimonials.map((item) => (
+                <blockquote key={item.author} className={`rounded-2xl p-5 ${theme.softCard}`}>
+                  <p className="leading-relaxed">"{item.quote}"</p>
+                  <footer className={`mt-3 text-sm font-semibold ${theme.primaryText}`}>- {item.author}</footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="languages" data-reveal className={`reveal py-24 px-6 md:px-12 ${theme.sectionAlt}`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-12">
+            <p className={`text-xs font-bold tracking-widest uppercase ${theme.primaryText}`}>Language</p>
+            <h2 className="text-4xl md:text-5xl font-bold mt-2">Languages</h2>
+          </div>
+          <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm max-w-3xl`}>
+            <div className="space-y-6">
+              {languages.map((lang) => (
+                <div key={lang.name}>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div>
+                      <p className="text-2xl font-bold">{lang.name}</p>
+                      <p className={theme.mutedText}>{lang.level}</p>
+                    </div>
+                  </div>
+                  <div className={`mt-4 h-2 rounded-full ${isDarkMode ? 'bg-[#193433]' : 'bg-[#E3E7E5]'}`}>
+                    <div className="h-2 rounded-full bg-[#B8872B]" style={{ width: `${lang.value}%` }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Experience Timeline Section */}
+      <section id="experience" data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Work Experience</h2>
+        
+        <div className="max-w-3xl mx-auto relative">
+          {/* Vertical Line for timeline */}
+          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-0.5 bg-[#738F8A]/30"></div>
+          
+          <div className="space-y-12">
+            {[
+              {
+                period: "Current",
+                role: "Lead Trainer (F&B Production Level 3)",
+                company: "SAIC Institute of Management & Technology",
+                active: true
+              },
+              {
+                period: "April 2025 – February 2026",
+                role: "Client Coordinator",
+                company: "Megamind Infotech, Dhaka",
+                active: false
+              },
+              {
+                period: "February 2018 – March 2025",
+                role: "Commis II",
+                company: "Amari Dhaka, Gulshan",
+                active: false
+              }
+            ].map((job, idx) => (
+              <div key={idx} className="relative pl-12 md:pl-20 group">
+                {/* Timeline Dot */}
+                <div className={`absolute left-2.5 md:left-6.5 top-1.5 w-3.5 h-3.5 rounded-full border-2 ${job.active ? 'bg-[#D7720C] border-[#D7720C]' : 'bg-[#F5F4ED] border-[#738F8A]'} group-hover:scale-125 transition-transform`}></div>
+                
+                <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-[#738F8A]/10 hover:shadow-md transition-shadow">
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4 ${job.active ? 'bg-[#D7720C]/10 text-[#D7720C]' : 'bg-[#738F8A]/10 text-[#738F8A]'}`}>
+                    {job.period}
+                  </span>
+                  <h3 className="text-2xl font-bold mb-1">{job.role}</h3>
+                  <p className="text-lg text-[#0D2322]/70 flex items-center gap-2">
+                    <Briefcase size={18} className={theme.accent} />
+                    {job.company}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Specialized Certifications Section */}
+      <section id="certifications" data-reveal className={`reveal py-24 ${theme.sectionAlt} px-6 md:px-12 border-y ${theme.line}`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Trainings & Certificates</h2>
+            <p className="text-[#738F8A] text-lg">A snapshot of professional trainings and credentials aligned with my CV.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {[
+              { title: "Assessor & Trainer (CBTA & M, Level 4)", org: "NSDA", year: "2026" },
+              { title: "Food and Beverage Production (Level 3)", org: "NSDA", year: "2025" },
+              { title: "Foundation Grammar & Writing (81%)", org: "Mentors", year: "2024" },
+              { title: "Spoken English & Phonetics (88%)", org: "Mentors", year: "2024" },
+              { title: "Driving Training", org: "Faridpur TTC", year: "2023" },
+              { title: "Digital Marketing", org: "Google Digital Garage", year: "2021" },
+              { title: "Facebook Blueprint Certification", org: "Facebook", year: "2021" },
+              { title: "Digital Marketing Course", org: "Sheikh Hasina Tech Park", year: "2021" },
+              { title: "Spoken English Course", org: "BBC Janala", year: "2016" },
+              { title: "Cabin Crew Basic Course", org: "Jobs1.com", year: "2015" },
+              { title: "News Presentation Course", org: "Jobs1.com", year: "2015" },
+              { title: "Basic Computer Skills", org: "Dept. of Social Service", year: "2014" }
+            ].map((cert, idx) => (
+              <div key={idx} className={`p-8 rounded-3xl ${theme.softCard} hover:bg-[#0D2322] hover:text-[#F5F4ED] transition-colors duration-300 group border ${theme.line}`}>
+                <p className="text-sm font-semibold text-[#D7720C] mb-2 tracking-wider uppercase">{cert.org}</p>
+                <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
+                <p className={`font-medium ${theme.mutedText} group-hover:text-[#738F8A]/80`}>{cert.year}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Education & Community Impact Section */}
+      <section id="education" data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          
+          {/* Education - Ekhane baki degree gulo add kora hoyeche */}
+          <div>
+            <div className="flex items-center gap-3 mb-8">
+              <BookOpen size={32} className={theme.primaryText} />
+              <h2 className="text-3xl font-bold">Academic Background</h2>
+            </div>
+            
+            <div className="space-y-6">
+              {/* Masters Degree */}
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#738F8A]/10 hover:border-[#738F8A]/40 transition-colors">
+                <h3 className="text-2xl font-bold mb-2">Master of Arts</h3>
+                <p className="text-lg text-[#0D2322] mb-4">Bengali Language, Literature & Culture</p>
+                <div className="flex items-center justify-between text-[#738F8A] font-medium border-t border-[#738F8A]/10 pt-4 mt-4">
+                  <span>National University of Bangladesh</span>
+                  <span>CGPA 3.00/4.00</span>
+                </div>
+              </div>
+
+              {/* Bachelors Degree */}
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#738F8A]/10 hover:border-[#738F8A]/40 transition-colors">
+                <h3 className="text-2xl font-bold mb-2">Bachelor of Arts</h3>
+                <p className="text-lg text-[#0D2322] mb-4">Bengali (Honours)</p>
+                <div className="flex items-center justify-between text-[#738F8A] font-medium border-t border-[#738F8A]/10 pt-4 mt-4">
+                  <span>National University of Bangladesh</span>
+                  <span>Passing Year: 2017</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Community */}
+          <div>
+            <div className="flex items-center gap-3 mb-8">
+              <Heart size={32} className={theme.primaryText} />
+              <h2 className="text-3xl font-bold">Community Impact</h2>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#738F8A]/10 flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors">
+                <div className="mt-1 w-2 h-2 rounded-full bg-[#D7720C]"></div>
+                <div>
+                  <h4 className="font-bold text-lg">RCY Volunteer</h4>
+                  <p className="text-[#738F8A]">Bangladesh Red Crescent Society</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#738F8A]/10 flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors">
+                <div className="mt-1 w-2 h-2 rounded-full bg-[#D7720C]"></div>
+                <div>
+                  <h4 className="font-bold text-lg">Field Agent</h4>
+                  <p className="text-[#738F8A]">Help Aid Foundation</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#738F8A]/10 flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors">
+                <div className="mt-1 w-2 h-2 rounded-full bg-[#D7720C]"></div>
+                <div>
+                  <h4 className="font-bold text-lg">Trainer</h4>
+                  <p className="text-[#738F8A]">Magura Ideal Debating Society</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Footer / Contact Section */}
+      <footer id="contact" data-reveal className="reveal bg-[#0D2322] text-[#F5F4ED] pt-24 pb-8 px-6 md:px-12 rounded-t-[3rem] mt-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16 border-b border-[#738F8A]/20 pb-16">
+            
+            <div>
+              <h2 className="text-4xl md:text-6xl font-bold mb-6">Let's work <br/> together.</h2>
+              <p className="text-xl text-[#738F8A] mb-8">Available for new work and direct inquiries.</p>
+              <a href="mailto:mailboxofsuvra@gmail.com" className={`inline-flex items-center gap-2 ${theme.primary} text-white px-8 py-4 rounded-full font-bold hover:bg-opacity-90 transition-all text-lg`}>
+                Start a Conversation
+                <ArrowRight size={20} />
+              </a>
+            </div>
+
+            <div className="flex flex-col justify-end space-y-6 md:pl-12">
+              <a href="mailto:mailboxofsuvra@gmail.com" className="flex items-center gap-4 text-xl hover:text-[#D7720C] transition-colors group">
+                <div className="p-3 bg-[#1A3332] rounded-full group-hover:bg-[#D7720C]/20 transition-colors"><Mail size={24} /></div>
+                mailboxofsuvra@gmail.com
+              </a>
+              <div className="flex items-center gap-4 text-xl group">
+                <div className="p-3 bg-[#1A3332] rounded-full"><Phone size={24} className="text-[#F5F4ED]" /></div>
+                +880 1327 274392
+              </div>
+              <div className="flex items-center gap-4 text-xl text-[#738F8A] group">
+                <div className="p-3 bg-[#1A3332] rounded-full"><MapPin size={24} className="text-[#F5F4ED]"/></div>
+                Boalmari, Faridpur, Bangladesh
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold mb-4">Quick Message</h3>
+              <form onSubmit={handleContactSubmit} className="space-y-3">
+                <input required placeholder="Your name" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
+                <input required type="email" placeholder="Your email" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
+                <textarea required rows={3} placeholder="Your message" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]"></textarea>
+                <button type="submit" className={`${theme.primary} text-white px-5 py-3 rounded-xl flex items-center gap-2`}>
+                  <Send size={18} />
+                  Send Message
+                </button>
+                {isFormSent && <p className="text-sm text-[#9fd3ad]">Message saved. I will get back to you soon.</p>}
+              </form>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center text-[#738F8A] text-sm">
+            <div className="flex space-x-6 mb-4 md:mb-0">
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
+              <a href="https://www.facebook.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Facebook</a>
+              <a href="https://www.instagram.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>
+            </div>
+            <div className="flex items-center gap-6">
+              <p>© 2026 Suvadra Kundu. All rights reserved.</p>
+              <button onClick={(e) => scrollToSection(e, 'home')} className="hover:text-white flex items-center gap-1 transition-colors">
+                Back to top ↑
+              </button>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <a
+        href={cvFile}
+        download="Suvadra_Kundu_CV.pptx.pdf"
+        className={`${theme.primary} fixed bottom-5 right-5 z-40 text-white px-5 py-3 rounded-full shadow-xl md:hidden`}
+      >
+        CV
+      </a>
+      <a
+        href="https://wa.me/8801327274392"
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-5 left-5 z-40 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-xl font-semibold"
+      >
+        WhatsApp
+      </a>
+    </div>
+  );
+}
