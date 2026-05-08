@@ -26,6 +26,7 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isFormSent, setIsFormSent] = useState(false);
 
   // Navbar er scroll effect control korar jonno
   useEffect(() => {
@@ -153,6 +154,34 @@ export default function App() {
     { name: 'Bangla', level: 'Fluent (Native)', value: 92 },
     { name: 'Hindi', level: 'Proficient (Speaking & Listening)', value: 65 },
   ];
+
+  const encodeForm = (data) =>
+    Object.keys(data)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join('&');
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeForm(payload),
+      });
+      form.reset();
+      setIsFormSent(true);
+      setTimeout(() => setIsFormSent(false), 3500);
+    } catch (error) {
+      setIsFormSent(false);
+    }
+  };
 
   return (
     <div className={`min-h-screen ${theme.bg} ${theme.text} font-sans transition-colors duration-300 selection:bg-[#738F8A] selection:text-white`}>
@@ -578,6 +607,7 @@ export default function App() {
                 method="POST"
                 data-netlify="true"
                 netlify-honeypot="bot-field"
+                onSubmit={handleContactSubmit}
                 className="space-y-3"
               >
                 <input type="hidden" name="form-name" value="quick-message" />
@@ -593,6 +623,7 @@ export default function App() {
                   <Send size={18} />
                   Send Message
                 </button>
+                {isFormSent && <p className="text-xs text-[#9fd3ad]">Message sent successfully. Thank you.</p>}
                 <p className="text-xs text-[#9fb4b0]">After Netlify deploy, messages will appear in Netlify Forms.</p>
               </form>
             </div>
