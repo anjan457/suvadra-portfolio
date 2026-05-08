@@ -27,6 +27,9 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isFormSent, setIsFormSent] = useState(false);
+  const [animatedStats, setAnimatedStats] = useState([0, 0, 0]);
+  const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   // Navbar er scroll effect control korar jonno
   useEffect(() => {
@@ -93,9 +96,9 @@ export default function App() {
         line: 'border-[#738F8A]/20',
       };
   const quickStats = [
-    { label: 'Years of Experience', value: '8+' },
-    { label: 'Teams Trained', value: '20+' },
-    { label: 'Projects Coordinated', value: '150+' },
+    { label: 'Years of Experience', value: 8, suffix: '+' },
+    { label: 'Teams Trained', value: 20, suffix: '+' },
+    { label: 'Projects Coordinated', value: 150, suffix: '+' },
   ];
   const projects = [
     {
@@ -109,9 +112,9 @@ export default function App() {
       stack: 'Program Design, Coordination, Documentation',
     },
     {
-      title: 'Digital Campaign Tracker',
-      desc: 'Simple campaign performance tracker for awareness and engagement-focused activities.',
-      stack: 'Meta Tools, Google Tools, Analytics',
+      title: 'Future Project: Chef & F&B Service Excellence',
+      desc: 'A practical workflow concept to improve kitchen coordination, food quality consistency, and guest service standards.',
+      stack: 'Food Production, Team Coordination, Service Quality',
     },
   ];
   const skills = [
@@ -154,6 +157,30 @@ export default function App() {
     { name: 'Bangla', level: 'Fluent (Native)', value: 92 },
     { name: 'Hindi', level: 'Proficient (Speaking & Listening)', value: 65 },
   ];
+  const galleryItems = [
+    { title: 'Training Session', subtitle: 'Facilitating practical group learning', src: profileImage },
+    { title: 'Professional Portrait', subtitle: 'Personal brand and profile highlight', src: profileImage },
+    { title: 'Team Collaboration', subtitle: 'Coordinating cross-functional activities', src: profileImage },
+    { title: 'Program Delivery', subtitle: 'Structured service and communication', src: profileImage },
+  ];
+  const faqItems = [
+    {
+      q: 'Are you available for full-time or freelance work?',
+      a: 'Yes. I am open to both full-time opportunities and project-based freelance coordination assignments.',
+    },
+    {
+      q: 'Which type of roles are best matched with your profile?',
+      a: 'Client coordination, training facilitation, documentation and reporting, and operations support roles are the best fit.',
+    },
+    {
+      q: 'How quickly can you start a new assignment?',
+      a: 'For most roles, I can start immediately or within a short transition window based on project requirements.',
+    },
+    {
+      q: 'Can we contact you directly for an interview?',
+      a: 'Absolutely. You can contact me by email, WhatsApp, or the quick message form on this website.',
+    },
+  ];
 
   const encodeForm = (data) =>
     Object.keys(data)
@@ -183,6 +210,22 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const targets = quickStats.map((item) => item.value);
+    const maxDuration = 900;
+    const frameMs = 24;
+    const steps = Math.max(1, Math.floor(maxDuration / frameMs));
+    let currentStep = 0;
+
+    const timer = setInterval(() => {
+      currentStep += 1;
+      setAnimatedStats(targets.map((target) => Math.min(target, Math.ceil((target * currentStep) / steps))));
+      if (currentStep >= steps) clearInterval(timer);
+    }, frameMs);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className={`min-h-screen ${theme.bg} ${theme.text} font-sans transition-colors duration-300 selection:bg-[#738F8A] selection:text-white`}>
       
@@ -197,10 +240,12 @@ export default function App() {
           <div className="hidden md:flex items-center space-x-8 font-medium">
             <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Services</a>
             <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Projects</a>
+            <a href="#gallery" onClick={(e) => scrollToSection(e, 'gallery')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Gallery</a>
             <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Experience</a>
             <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Credentials</a>
             <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Education</a>
             <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Language</a>
+            <a href="#faq" onClick={(e) => scrollToSection(e, 'faq')} className="hover:text-[#D7720C] transition-colors cursor-pointer">FAQ</a>
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2.5 rounded-full border ${theme.line} hover:scale-105 transition`}>
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
@@ -220,10 +265,12 @@ export default function App() {
           <div className={`md:hidden absolute top-full left-0 w-full ${theme.bg} shadow-lg py-6 px-6 flex flex-col space-y-4 font-medium border-t ${theme.line}`}>
             <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="block hover:text-[#D7720C]">Services</a>
             <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className="block hover:text-[#D7720C]">Projects</a>
+            <a href="#gallery" onClick={(e) => scrollToSection(e, 'gallery')} className="block hover:text-[#D7720C]">Gallery</a>
             <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className="block hover:text-[#D7720C]">Experience</a>
             <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className="block hover:text-[#D7720C]">Credentials</a>
             <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className="block hover:text-[#D7720C]">Education</a>
             <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className="block hover:text-[#D7720C]">Language</a>
+            <a href="#faq" onClick={(e) => scrollToSection(e, 'faq')} className="block hover:text-[#D7720C]">FAQ</a>
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-full py-2 rounded-xl border ${theme.line}`}>
               {isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
             </button>
@@ -263,9 +310,9 @@ export default function App() {
             </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            {quickStats.map((item) => (
+            {quickStats.map((item, idx) => (
               <div key={item.label} className="rounded-2xl border border-[#738F8A]/20 bg-white/70 backdrop-blur-sm p-4 text-left shadow-sm">
-                <p className="text-2xl font-extrabold tracking-tight">{item.value}</p>
+                <p className="text-2xl font-extrabold tracking-tight">{animatedStats[idx]}{item.suffix}</p>
                 <p className="text-sm text-[#738F8A]">{item.label}</p>
               </div>
             ))}
@@ -303,15 +350,15 @@ export default function App() {
           <div className="mb-16 md:flex justify-between items-end">
             <div className="max-w-2xl">
               <h2 className="text-4xl md:text-5xl font-bold mb-4">Professional Services</h2>
-              <p className="text-[#738F8A] text-lg">Delivering streamlined workflows and effective communication for complex organizational tasks.</p>
+              <p className="text-[#738F8A] text-lg">Delivering high-quality coordination, hospitality operations, and training support with proven hands-on experience.</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { title: "Client Coordination", icon: <MessageCircle size={32} />, desc: "Managing communications, task scheduling, and work order tracking." },
-              { title: "Instructional Training", icon: <Award size={32} />, desc: "Certified Lead Trainer (NSDA Level 4) for professional development." },
-              { title: "Data Management", icon: <Database size={32} />, desc: "Expert documentation and data entry using MS Word and MS Excel." },
+              { title: "Assessor-Led Training", icon: <Award size={32} />, desc: "NSDA Level 4 certified Assessor & Trainer, delivering structured classes and practical skill development." },
+              { title: "Food & Beverage Operations", icon: <Briefcase size={32} />, desc: "Supporting smooth kitchen workflow, food quality control, and efficient team coordination for consistent service delivery." },
               { title: "Digital Marketing", icon: <TrendingUp size={32} />, desc: "Strategic growth using Facebook Blueprint and Google Digital Garage tools." }
             ].map((service, idx) => (
               <div key={idx} className="bg-[#1A3332] p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 border border-[#738F8A]/20 hover:border-[#D7720C] hover:shadow-xl">
@@ -339,6 +386,28 @@ export default function App() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="gallery" data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold">Photo Gallery</h2>
+          <p className={`${theme.mutedText} mt-3`}>Training, coordination, and professional highlights.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {galleryItems.map((item, idx) => (
+            <button
+              key={`${item.title}-${idx}`}
+              onClick={() => setSelectedGalleryImage(item)}
+              className={`text-left rounded-3xl overflow-hidden border ${theme.line} ${theme.cardBg} hover:-translate-y-1 hover:shadow-xl transition-all`}
+            >
+              <img src={item.src} alt={item.title} className="h-56 w-full object-cover" loading="lazy" />
+              <div className="p-4">
+                <p className="font-bold">{item.title}</p>
+                <p className={`text-sm mt-1 ${theme.mutedText}`}>{item.subtitle}</p>
+              </div>
+            </button>
+          ))}
         </div>
       </section>
 
@@ -420,6 +489,27 @@ export default function App() {
         </div>
       </section>
 
+      <section id="faq" data-reveal className="reveal py-24 px-6 md:px-12 max-w-5xl mx-auto">
+        <div className="mb-10 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold">Frequently Asked Questions</h2>
+          <p className={`${theme.mutedText} mt-3`}>Quick answers to common queries.</p>
+        </div>
+        <div className="space-y-4">
+          {faqItems.map((item, idx) => (
+            <div key={item.q} className={`rounded-2xl border ${theme.line} ${theme.cardBg}`}>
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === idx ? -1 : idx)}
+                className="w-full flex items-center justify-between px-5 py-4 text-left font-semibold"
+              >
+                <span>{item.q}</span>
+                <span className={theme.primaryText}>{openFaqIndex === idx ? '-' : '+'}</span>
+              </button>
+              {openFaqIndex === idx && <p className={`px-5 pb-5 ${theme.mutedText}`}>{item.a}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Experience Timeline Section */}
       <section id="experience" data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Work Experience</h2>
@@ -492,7 +582,7 @@ export default function App() {
               { title: "News Presentation Course", org: "Jobs1.com", year: "2015" },
               { title: "Basic Computer Skills", org: "Dept. of Social Service", year: "2014" }
             ].map((cert, idx) => (
-              <div key={idx} className={`p-8 rounded-3xl ${theme.softCard} hover:bg-[#0D2322] hover:text-[#F5F4ED] transition-colors duration-300 group border ${theme.line}`}>
+              <div key={idx} className={`p-8 rounded-3xl ${theme.softCard} hover:bg-[#0D2322] hover:text-[#F5F4ED] transition-all duration-300 group border ${theme.line} hover:-translate-y-1 hover:shadow-xl`}>
                 <p className="text-sm font-semibold text-[#D7720C] mb-2 tracking-wider uppercase">{cert.org}</p>
                 <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
                 <p className={`font-medium ${theme.mutedText} group-hover:text-[#738F8A]/80`}>{cert.year}</p>
@@ -674,6 +764,30 @@ export default function App() {
           <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
         </svg>
       </a>
+      {selectedGalleryImage && (
+        <div
+          className="fixed inset-0 z-[70] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedGalleryImage(null)}
+        >
+          <div className="max-w-3xl w-full rounded-3xl overflow-hidden bg-white" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedGalleryImage.src} alt={selectedGalleryImage.title} className="w-full max-h-[70vh] object-cover" />
+            <div className="p-5">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xl font-bold text-[#0D2322]">{selectedGalleryImage.title}</p>
+                  <p className="text-[#5E6F6B]">{selectedGalleryImage.subtitle}</p>
+                </div>
+                <button
+                  className="h-10 w-10 rounded-full bg-[#0D2322] text-white flex items-center justify-center"
+                  onClick={() => setSelectedGalleryImage(null)}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

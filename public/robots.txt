@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://suvadra-portfolio.netlify.app/sitemap.xml
