@@ -26,7 +26,6 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isFormSent, setIsFormSent] = useState(false);
 
   // Navbar er scroll effect control korar jonno
   useEffect(() => {
@@ -155,12 +154,6 @@ export default function App() {
     { name: 'Hindi', level: 'Proficient (Speaking & Listening)', value: 65 },
   ];
 
-  const handleContactSubmit = (e) => {
-    e.preventDefault();
-    setIsFormSent(true);
-    setTimeout(() => setIsFormSent(false), 3000);
-  };
-
   return (
     <div className={`min-h-screen ${theme.bg} ${theme.text} font-sans transition-colors duration-300 selection:bg-[#738F8A] selection:text-white`}>
       
@@ -217,9 +210,6 @@ export default function App() {
         <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#D7720C]/10 blur-3xl"></div>
         <div className="pointer-events-none absolute bottom-0 -left-24 h-72 w-72 rounded-full bg-[#738F8A]/20 blur-3xl"></div>
         <div className="flex-1 space-y-8 text-center md:text-left">
-          <div className={`inline-block px-4 py-1.5 rounded-full border border-[#738F8A]/30 ${theme.accent} text-sm font-semibold tracking-wide uppercase`}>
-            Available for New Work
-          </div>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
             Suvadra <br className="hidden md:block"/> Kundu
           </h1>
@@ -273,9 +263,6 @@ export default function App() {
             {/* Decorative element */}
             <div className={`absolute bottom-4 left-4 w-16 h-16 ${theme.primary} rounded-full flex items-center justify-center text-white shadow-lg`}>
               <ArrowRight className="-rotate-45" size={28} />
-            </div>
-            <div className="absolute -top-2 right-2 rounded-full bg-white px-4 py-2 text-xs font-semibold shadow-md border border-[#738F8A]/20">
-              Open to projects
             </div>
           </div>
         </div>
@@ -586,15 +573,27 @@ export default function App() {
 
             <div>
               <h3 className="text-2xl font-bold mb-4">Quick Message</h3>
-              <form onSubmit={handleContactSubmit} className="space-y-3">
-                <input required placeholder="Your name" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
-                <input required type="email" placeholder="Your email" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
-                <textarea required rows={3} placeholder="Your message" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]"></textarea>
+              <form
+                name="quick-message"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                className="space-y-3"
+              >
+                <input type="hidden" name="form-name" value="quick-message" />
+                <p className="hidden">
+                  <label>
+                    Do not fill this if you are human: <input name="bot-field" />
+                  </label>
+                </p>
+                <input name="name" required placeholder="Your name" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
+                <input name="email" required type="email" placeholder="Your email" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
+                <textarea name="message" required rows={3} placeholder="Your message" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]"></textarea>
                 <button type="submit" className={`${theme.primary} text-white px-5 py-3 rounded-xl flex items-center gap-2`}>
                   <Send size={18} />
                   Send Message
                 </button>
-                {isFormSent && <p className="text-sm text-[#9fd3ad]">Message saved. I will get back to you soon.</p>}
+                <p className="text-xs text-[#9fb4b0]">After Netlify deploy, messages will appear in Netlify Forms.</p>
               </form>
             </div>
           </div>
@@ -622,12 +621,27 @@ export default function App() {
         CV
       </a>
       <a
+        href="mailto:mailboxofsuvra@gmail.com"
+        aria-label="Email Suvadra"
+        className="fixed bottom-20 left-5 z-40 bg-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center border border-black/5 hover:scale-105 transition-transform"
+      >
+        <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
+          <path fill="#EA4335" d="M1.5 5.5v13h4.2V9.1L1.5 5.5z" />
+          <path fill="#34A853" d="M18.3 9.1v9.4h4.2v-13l-4.2 3.6z" />
+          <path fill="#FBBC05" d="M18.3 18.5H5.7V9.1L12 14l6.3-4.9v9.4z" />
+          <path fill="#4285F4" d="M22.5 5.5L12 14 1.5 5.5 3.8 4h16.4l2.3 1.5z" />
+        </svg>
+      </a>
+      <a
         href="https://wa.me/8801327274392"
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-5 left-5 z-40 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-xl font-semibold"
+        aria-label="WhatsApp Suvadra"
+        className="fixed bottom-5 left-5 z-40 bg-[#25D366] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform"
       >
-        WhatsApp
+        <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
+          <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
+        </svg>
       </a>
     </div>
   );
