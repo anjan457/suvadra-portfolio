@@ -7,6 +7,8 @@ import {
   BookOpen, 
   Heart, 
   ArrowRight, 
+  ChevronLeft,
+  ChevronRight,
   Menu, 
   X, 
   MapPin, 
@@ -28,7 +30,8 @@ export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isFormSent, setIsFormSent] = useState(false);
   const [animatedStats, setAnimatedStats] = useState([0, 0, 0]);
-  const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [isGalleryGridOpen, setIsGalleryGridOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   // Navbar er scroll effect control korar jonno
@@ -181,6 +184,14 @@ export default function App() {
       a: 'Absolutely. You can contact me by email, WhatsApp, or the quick message form on this website.',
     },
   ];
+
+  const nextGallery = () => {
+    setActiveGalleryIndex((prev) => (prev + 1) % galleryItems.length);
+  };
+
+  const prevGallery = () => {
+    setActiveGalleryIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
+  };
 
   const encodeForm = (data) =>
     Object.keys(data)
@@ -394,20 +405,46 @@ export default function App() {
           <h2 className="text-4xl md:text-5xl font-bold">Photo Gallery</h2>
           <p className={`${theme.mutedText} mt-3`}>Training, coordination, and professional highlights.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {galleryItems.map((item, idx) => (
-            <button
-              key={`${item.title}-${idx}`}
-              onClick={() => setSelectedGalleryImage(item)}
-              className={`text-left rounded-3xl overflow-hidden border ${theme.line} ${theme.cardBg} hover:-translate-y-1 hover:shadow-xl transition-all`}
-            >
-              <img src={item.src} alt={item.title} className="h-56 w-full object-cover" loading="lazy" />
-              <div className="p-4">
-                <p className="font-bold">{item.title}</p>
-                <p className={`text-sm mt-1 ${theme.mutedText}`}>{item.subtitle}</p>
-              </div>
-            </button>
-          ))}
+        <div className={`rounded-3xl overflow-hidden border ${theme.line} ${theme.cardBg} shadow-sm`}>
+          <button
+            onClick={() => setIsGalleryGridOpen(true)}
+            className="relative w-full text-left"
+          >
+            <img
+              key={`gallery-main-${activeGalleryIndex}`}
+              src={galleryItems[activeGalleryIndex].src}
+              alt={galleryItems[activeGalleryIndex].title}
+              className="h-[320px] md:h-[460px] w-full object-contain bg-[#0D2322]/5 gallery-fade-in"
+              loading="lazy"
+            />
+            <span className="absolute top-4 right-4 rounded-full bg-black/60 text-white px-3 py-1 text-sm">
+              {activeGalleryIndex + 1}/{galleryItems.length}
+            </span>
+          </button>
+          <div className="p-5 md:p-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xl font-bold">{galleryItems[activeGalleryIndex].title}</p>
+              <p className={`text-sm mt-1 ${theme.mutedText}`}>{galleryItems[activeGalleryIndex].subtitle}</p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={prevGallery} className={`h-10 w-10 rounded-full border ${theme.line} flex items-center justify-center`}>
+                <ChevronLeft size={18} />
+              </button>
+              <button onClick={nextGallery} className={`h-10 w-10 rounded-full border ${theme.line} flex items-center justify-center`}>
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+          <div className="px-5 pb-5 md:px-6 md:pb-6 flex flex-wrap gap-2">
+            {galleryItems.map((_, idx) => (
+              <button
+                key={`dot-${idx}`}
+                onClick={() => setActiveGalleryIndex(idx)}
+                className={`h-2.5 rounded-full transition-all ${idx === activeGalleryIndex ? 'w-8 bg-[#D7720C]' : `w-2.5 ${isDarkMode ? 'bg-[#436661]' : 'bg-[#CAD6D3]'}`}`}
+                aria-label={`Show gallery image ${idx + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -764,26 +801,37 @@ export default function App() {
           <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
         </svg>
       </a>
-      {selectedGalleryImage && (
+      {isGalleryGridOpen && (
         <div
           className="fixed inset-0 z-[70] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setSelectedGalleryImage(null)}
+          onClick={() => setIsGalleryGridOpen(false)}
         >
-          <div className="max-w-3xl w-full rounded-3xl overflow-hidden bg-white" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedGalleryImage.src} alt={selectedGalleryImage.title} className="w-full max-h-[70vh] object-cover" />
-            <div className="p-5">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xl font-bold text-[#0D2322]">{selectedGalleryImage.title}</p>
-                  <p className="text-[#5E6F6B]">{selectedGalleryImage.subtitle}</p>
-                </div>
-                <button
-                  className="h-10 w-10 rounded-full bg-[#0D2322] text-white flex items-center justify-center"
-                  onClick={() => setSelectedGalleryImage(null)}
-                >
-                  <X size={18} />
-                </button>
+          <div className="max-w-5xl w-full rounded-3xl overflow-hidden bg-white" onClick={(e) => e.stopPropagation()}>
+            <div className="p-5 md:p-6 border-b border-[#E4E8E7] flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xl font-bold text-[#0D2322]">Gallery Preview</p>
+                <p className="text-[#5E6F6B]">All photos in one view ({galleryItems.length})</p>
               </div>
+              <button
+                className="h-10 w-10 rounded-full bg-[#0D2322] text-white flex items-center justify-center"
+                onClick={() => setIsGalleryGridOpen(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[75vh] overflow-auto">
+              {galleryItems.map((item, idx) => (
+                <figure
+                  key={`grid-photo-${idx}`}
+                  className="rounded-2xl overflow-hidden border border-[#E2E7E5] bg-[#F7F7F5] gallery-pop-in"
+                  style={{ animationDelay: `${idx * 60}ms` }}
+                >
+                  <img src={item.src} alt={item.title} className="w-full h-44 object-contain bg-[#0D2322]/5" />
+                  <figcaption className="p-3">
+                    <p className="font-semibold text-[#0D2322] text-sm">{item.title}</p>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </div>
         </div>
