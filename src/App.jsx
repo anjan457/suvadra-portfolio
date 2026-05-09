@@ -14,7 +14,6 @@ import {
   MapPin, 
   Phone,
   MessageCircle,
-  Database,
   TrendingUp,
   Sun,
   Moon,
@@ -23,6 +22,12 @@ import {
 } from 'lucide-react';
 import profileImage from './assets/suvadra.jpg';
 import cvFile from './assets/Suvadra_Kundu_CV.pptx.pdf';
+
+const quickStats = [
+  { label: 'Years of Experience', value: 8, suffix: '+' },
+  { label: 'Teams Trained', value: 20, suffix: '+' },
+  { label: 'Projects Coordinated', value: 150, suffix: '+' },
+];
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -39,6 +44,7 @@ export default function App() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -98,11 +104,6 @@ export default function App() {
         borderAccent: 'border-[#738F8A]',
         line: 'border-[#738F8A]/20',
       };
-  const quickStats = [
-    { label: 'Years of Experience', value: 8, suffix: '+' },
-    { label: 'Teams Trained', value: 20, suffix: '+' },
-    { label: 'Projects Coordinated', value: 150, suffix: '+' },
-  ];
   const projects = [
     {
       title: 'Client Service Dashboard',
@@ -302,7 +303,7 @@ export default function App() {
           </h1>
           <h2 className={`text-xl md:text-2xl ${theme.accent} font-medium leading-relaxed max-w-2xl`}>
             Professional Client Coordinator & Lead Trainer. <br/>
-            <span className="text-[#0D2322]">I transform complex data and daily operations into clear, people-first workflows that teams can trust.</span>
+            <span className={theme.text}>I transform complex data and daily operations into clear, people-first workflows that teams can trust.</span>
           </h2>
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center md:justify-start">
             <a href="mailto:mailboxofsuvra@gmail.com" className={`${theme.primary} text-white px-8 py-4 rounded-full font-medium hover:bg-opacity-90 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto justify-center`}>
@@ -314,7 +315,7 @@ export default function App() {
             <a 
               href={cvFile} 
               download="Suvadra_Kundu_CV.pptx.pdf" 
-              className={`bg-transparent border-2 border-[#0D2322] ${theme.text} px-8 py-4 rounded-full font-medium hover:bg-[#0D2322] hover:text-[#F5F4ED] transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
+              className={`bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
             >
               <Download size={20} />
               Download CV
@@ -322,9 +323,9 @@ export default function App() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             {quickStats.map((item, idx) => (
-              <div key={item.label} className="rounded-2xl border border-[#738F8A]/20 bg-white/70 backdrop-blur-sm p-4 text-left shadow-sm">
+              <div key={item.label} className={`rounded-2xl border ${theme.line} ${theme.cardBg} backdrop-blur-sm p-4 text-left shadow-sm`}>
                 <p className="text-2xl font-extrabold tracking-tight">{animatedStats[idx]}{item.suffix}</p>
-                <p className="text-sm text-[#738F8A]">{item.label}</p>
+                <p className={`text-sm ${theme.mutedText}`}>{item.label}</p>
               </div>
             ))}
           </div>
@@ -488,7 +489,7 @@ export default function App() {
           </div>
           <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm`}>
             <h3 className="text-3xl font-bold mb-6">Testimonials</h3>
-            <div className="space-y-4">
+            <div className="space-y-4">  
               {testimonials.map((item) => (
                 <blockquote key={item.author} className={`rounded-2xl p-5 ${theme.softCard}`}>
                   <p className="leading-relaxed">"{item.quote}"</p>
@@ -578,14 +579,14 @@ export default function App() {
             ].map((job, idx) => (
               <div key={idx} className="relative pl-12 md:pl-20 group">
                 {/* Timeline Dot */}
-                <div className={`absolute left-2.5 md:left-6.5 top-1.5 w-3.5 h-3.5 rounded-full border-2 ${job.active ? 'bg-[#D7720C] border-[#D7720C]' : 'bg-[#F5F4ED] border-[#738F8A]'} group-hover:scale-125 transition-transform`}></div>
+                <div className={`absolute left-2.5 md:left-7 top-1.5 w-3.5 h-3.5 rounded-full border-2 ${job.active ? 'bg-[#D7720C] border-[#D7720C]' : `${theme.cardBg} border-[#738F8A]`} group-hover:scale-125 transition-transform`}></div>
                 
-                <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-[#738F8A]/10 hover:shadow-md transition-shadow">
+                <div className={`${theme.cardBg} p-6 md:p-8 rounded-3xl shadow-sm border ${theme.line} hover:shadow-md transition-shadow`}>
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4 ${job.active ? 'bg-[#D7720C]/10 text-[#D7720C]' : 'bg-[#738F8A]/10 text-[#738F8A]'}`}>
                     {job.period}
                   </span>
                   <h3 className="text-2xl font-bold mb-1">{job.role}</h3>
-                  <p className="text-lg text-[#0D2322]/70 flex items-center gap-2">
+                  <p className={`text-lg ${theme.mutedText} flex items-center gap-2`}>
                     <Briefcase size={18} className={theme.accent} />
                     {job.company}
                   </p>
@@ -642,20 +643,20 @@ export default function App() {
             
             <div className="space-y-6">
               {/* Masters Degree */}
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#738F8A]/10 hover:border-[#738F8A]/40 transition-colors">
+              <div className={`${theme.cardBg} p-8 rounded-3xl shadow-sm border ${theme.line} hover:border-[#738F8A]/40 transition-colors`}>
                 <h3 className="text-2xl font-bold mb-2">Master of Arts</h3>
-                <p className="text-lg text-[#0D2322] mb-4">Bengali Language, Literature & Culture</p>
-                <div className="flex items-center justify-between text-[#738F8A] font-medium border-t border-[#738F8A]/10 pt-4 mt-4">
+                <p className={`text-lg ${theme.text} mb-4`}>Bengali Language, Literature & Culture</p>
+                <div className={`flex items-center justify-between ${theme.mutedText} font-medium border-t ${theme.line} pt-4 mt-4`}>
                   <span>National University of Bangladesh</span>
                   <span>CGPA 3.00/4.00</span>
                 </div>
               </div>
 
               {/* Bachelors Degree */}
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#738F8A]/10 hover:border-[#738F8A]/40 transition-colors">
+              <div className={`${theme.cardBg} p-8 rounded-3xl shadow-sm border ${theme.line} hover:border-[#738F8A]/40 transition-colors`}>
                 <h3 className="text-2xl font-bold mb-2">Bachelor of Arts</h3>
-                <p className="text-lg text-[#0D2322] mb-4">Bengali (Honours)</p>
-                <div className="flex items-center justify-between text-[#738F8A] font-medium border-t border-[#738F8A]/10 pt-4 mt-4">
+                <p className={`text-lg ${theme.text} mb-4`}>Bengali (Honours)</p>
+                <div className={`flex items-center justify-between ${theme.mutedText} font-medium border-t ${theme.line} pt-4 mt-4`}>
                   <span>National University of Bangladesh</span>
                   <span>Passing Year: 2017</span>
                 </div>
@@ -671,25 +672,25 @@ export default function App() {
               <h2 className="text-3xl font-bold">Community Impact</h2>
             </div>
             <div className="space-y-4">
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#738F8A]/10 flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors">
+              <div className={`${theme.cardBg} p-6 rounded-3xl shadow-sm border ${theme.line} flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors`}>
                 <div className="mt-1 w-2 h-2 rounded-full bg-[#D7720C]"></div>
                 <div>
                   <h4 className="font-bold text-lg">RCY Volunteer</h4>
-                  <p className="text-[#738F8A]">Bangladesh Red Crescent Society</p>
+                  <p className={theme.mutedText}>Bangladesh Red Crescent Society</p>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#738F8A]/10 flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors">
+              <div className={`${theme.cardBg} p-6 rounded-3xl shadow-sm border ${theme.line} flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors`}>
                 <div className="mt-1 w-2 h-2 rounded-full bg-[#D7720C]"></div>
                 <div>
                   <h4 className="font-bold text-lg">Field Agent</h4>
-                  <p className="text-[#738F8A]">Help Aid Foundation</p>
+                  <p className={theme.mutedText}>Help Aid Foundation</p>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#738F8A]/10 flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors">
+              <div className={`${theme.cardBg} p-6 rounded-3xl shadow-sm border ${theme.line} flex items-start gap-4 hover:border-[#738F8A]/40 transition-colors`}>
                 <div className="mt-1 w-2 h-2 rounded-full bg-[#D7720C]"></div>
                 <div>
                   <h4 className="font-bold text-lg">Trainer</h4>
-                  <p className="text-[#738F8A]">Magura Ideal Debating Society</p>
+                  <p className={theme.mutedText}>Magura Ideal Debating Society</p>
                 </div>
               </div>
             </div>
@@ -751,16 +752,14 @@ export default function App() {
                   Send Message
                 </button>
                 {isFormSent && <p className="text-xs text-[#9fd3ad]">Message sent successfully. Thank you.</p>}
-                <p className="text-xs text-[#9fb4b0]">After Netlify deploy, messages will appear in Netlify Forms.</p>
               </form>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center text-[#738F8A] text-sm">
             <div className="flex space-x-6 mb-4 md:mb-0">
-              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
-              <a href="https://www.facebook.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Facebook</a>
-              <a href="https://www.instagram.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>
+              <a href="https://www.linkedin.com/in/sk-shuvra/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
+              <a href="https://x.com/suvadrakundu" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">X (Twitter)</a>
             </div>
             <div className="flex items-center gap-6">
               <p>© 2026 Suvadra Kundu. All rights reserved.</p>
