@@ -308,7 +308,7 @@ export default function App() {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center md:justify-start">
             <a href="mailto:mailboxofsuvra@gmail.com" className={`${theme.primary} text-white px-8 py-4 rounded-full font-medium hover:bg-opacity-90 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto justify-center`}>
               <Mail size={20} />
-              Get in Touch
+              Let's talk
             </a>
             
             {/* Ekhane button er bodole anchor tag deya holo jate CV download hoy */}
