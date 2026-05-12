@@ -297,7 +297,7 @@ export default function App() {
       <section id="home" data-reveal className="reveal relative overflow-hidden pt-32 pb-20 md:pt-48 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20">
         <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#D7720C]/10 blur-3xl"></div>
         <div className="pointer-events-none absolute bottom-0 -left-24 h-72 w-72 rounded-full bg-[#738F8A]/20 blur-3xl"></div>
-        <div className="flex-1 space-y-8 text-center md:text-left">
+        <div className="relative z-20 flex-1 space-y-8 text-center md:text-left">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
             Suvadra <br className="hidden md:block"/> Kundu
           </h1>
@@ -332,7 +332,8 @@ export default function App() {
         </div>
         
         {/* Hero portrait — 3D floating PNG (no frame) */}
-        <div className="flex w-full flex-1 justify-center md:w-auto md:justify-end md:pr-2">
+        {/* pointer-events: portrait visually overlaps text on md+ (translate); clicks must pass through to mailto links */}
+        <div className="pointer-events-none [&_*]:pointer-events-none flex w-full flex-1 justify-center md:w-auto md:justify-end md:pr-2">
           {/* No aspect-[3/4] here — inner .profile-3d-stage keeps ratio; outer must grow so the tagline box does not overflow onto the heading (mobile). */}
           <div className="relative mx-auto w-full max-w-[320px] translate-x-1 overflow-visible md:mx-0 md:max-w-[24rem] md:-translate-x-6 lg:-translate-x-8">
             {/* Orbit rings around portrait */}
@@ -840,14 +841,14 @@ export default function App() {
       <a
         href={profileImage}
         download="Suvadra_Kundu_Profile.png"
-        className={`${theme.primary} fixed bottom-5 right-5 z-40 text-white px-5 py-3 rounded-full shadow-xl md:hidden`}
+        className={`${theme.primary} fixed bottom-5 right-5 z-[55] text-white px-5 py-3 rounded-full shadow-xl md:hidden`}
       >
         CV
       </a>
       <a
         href="mailto:mailboxofsuvra@gmail.com"
         aria-label="Email Suvadra"
-        className="fixed bottom-20 left-5 z-40 bg-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center border border-black/5 hover:scale-105 transition-transform"
+        className="fixed bottom-20 left-5 z-[55] bg-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center border border-black/5 hover:scale-105 transition-transform"
       >
         <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
           <path fill="#EA4335" d="M1.5 5.5v13h4.2V9.1L1.5 5.5z" />
@@ -861,7 +862,7 @@ export default function App() {
         target="_blank"
         rel="noreferrer"
         aria-label="WhatsApp Suvadra"
-        className="fixed bottom-5 left-5 z-40 bg-[#25D366] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform"
+        className="fixed bottom-5 left-5 z-[55] bg-[#25D366] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform"
       >
         <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
           <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
