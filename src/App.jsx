@@ -20,7 +20,7 @@ import {
   Sparkles,
   Send
 } from 'lucide-react';
-import profileImage from './assets/suvadra.jpg';
+import profileImage from './assets/suv4.png';
 import cvFile from './assets/Suvadra_Kundu_CV.pptx.pdf';
 
 const quickStats = [
@@ -313,8 +313,8 @@ export default function App() {
             
             {/* Ekhane button er bodole anchor tag deya holo jate CV download hoy */}
             <a 
-              href={cvFile} 
-              download="Suvadra_Kundu_CV.pptx.pdf" 
+              href={profileImage} 
+              download="Suvadra_Kundu_Profile.png" 
               className={`bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
             >
               <Download size={20} />
@@ -331,27 +331,93 @@ export default function App() {
           </div>
         </div>
         
-        {/* Hero Image Section */}
-        <div className="flex-1 flex justify-center md:justify-end">
-          <div className="relative w-72 h-72 md:w-96 md:h-96">
-            <div className={`absolute inset-0 ${theme.accentBg} rounded-full opacity-20 animate-pulse`}></div>
-            <div className={`absolute inset-4 border-2 ${theme.borderAccent} rounded-full`}></div>
-            <div className="absolute inset-6 rounded-full border border-[#D7720C]/40"></div>
-            <div className="absolute inset-8 bg-[#0D2322] rounded-full overflow-hidden shadow-2xl flex items-center justify-center">
-               {/* Jokhon apni eta apnar pc te run korben, nicher src ta change kore apnar "image.png" diye diben:
-                 <img src="image.png" alt="Suvadra Kundu" className="w-full h-full object-cover" />
-               */}
-               <img 
-                 src={profileImage} 
-                 alt="Suvadra Kundu" 
-                 className="w-full h-full object-cover"
-                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
-               />
+        {/* Hero portrait — 3D floating PNG (no frame) */}
+        <div className="flex flex-1 justify-center md:justify-end md:pr-2">
+          <div className="relative mx-auto aspect-[3/4] w-full max-w-[320px] translate-x-1 overflow-visible md:mx-0 md:max-w-[24rem] md:-translate-x-6 lg:-translate-x-8">
+            {/* Orbit rings around portrait */}
+            <div aria-hidden className="pointer-events-none absolute inset-0 z-[2]">
+              <div className="absolute left-1/2 top-[44%] flex h-[74%] w-[74%] max-h-[19rem] max-w-[19rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+                <div
+                  className={`profile-orbit-spin relative h-full w-full rounded-full border-2 border-dashed ${
+                    isDarkMode ? 'border-[#738F8A]/35' : 'border-[#738F8A]/45'
+                  }`}
+                >
+                  <span
+                    className={`absolute left-0 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full shadow-lg ${
+                      isDarkMode
+                        ? 'bg-[#F0A048] shadow-[#D7720C]/35'
+                        : 'bg-[#D7720C] shadow-[#D7720C]/40'
+                    }`}
+                  />
+                </div>
+              </div>
+              <div className="absolute left-1/2 top-[44%] flex h-[88%] w-[88%] max-h-[22.5rem] max-w-[22.5rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+                <div
+                  className={`profile-orbit-spin profile-orbit-spin--reverse h-full w-full rounded-full border ${
+                    isDarkMode ? 'border-[#D7720C]/22' : 'border-[#D7720C]/32'
+                  } shadow-[0_0_36px_rgba(215,114,12,0.08)]`}
+                />
+              </div>
             </div>
-            {/* Decorative element */}
-            <div className={`absolute bottom-4 left-4 w-16 h-16 ${theme.primary} rounded-full flex items-center justify-center text-white shadow-lg`}>
-              <ArrowRight className="-rotate-45" size={28} />
+
+            {/* Floating info badges */}
+            {/* Top-left: NSDA badge */}
+            <div className={`absolute -left-6 top-8 z-20 flex items-center gap-2 rounded-2xl px-3 py-2 shadow-xl backdrop-blur-md ${isDarkMode ? 'bg-[#112928]/90 border border-[#436661]/60 text-[#EAF1EF]' : 'bg-white/90 border border-[#D7720C]/20 text-[#0D2322]'}`}>
+              <Award size={16} className="text-[#D7720C]" />
+              <span className="text-xs font-bold">NSDA Level 4</span>
             </div>
+            {/* Top-right: Experience */}
+            <div className={`absolute -right-4 top-20 z-20 flex flex-col items-center rounded-2xl px-4 py-3 shadow-xl backdrop-blur-md ${isDarkMode ? 'bg-[#112928]/90 border border-[#436661]/60 text-[#EAF1EF]' : 'bg-white/90 border border-[#738F8A]/20 text-[#0D2322]'}`}>
+              <span className="text-xl font-extrabold text-[#D7720C]">8+</span>
+              <span className="text-[10px] font-semibold leading-tight text-center">Years Exp.</span>
+            </div>
+
+            <div className="profile-3d-stage relative z-10 aspect-[3/4] w-full">
+            {/* Soft glow halo behind the figure */}
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-0 -z-10 blur-3xl ${isDarkMode ? 'bg-[#D7720C]/25' : 'bg-[#D7720C]/20'}`}
+              style={{ borderRadius: '50%' }}
+            />
+            {/* Secondary cool glow */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-6 -z-10 rounded-full bg-[#738F8A]/20 blur-3xl"
+            />
+            {/* Ground shadow ellipse */}
+            <div
+              aria-hidden
+              className="profile-3d-ground pointer-events-none absolute -bottom-2 left-1/2 h-6 w-3/5 -translate-x-1/2 rounded-[50%] bg-black/35 blur-xl"
+            />
+            <div className="profile-3d-wrapper relative h-full w-full">
+              <img
+                src={profileImage}
+                alt="Suvadra Kundu"
+                className={`profile-3d-img relative z-10 mx-auto h-full w-full object-contain object-top scale-[1.12] ${
+                  isDarkMode ? 'profile-3d-img--dark' : 'profile-3d-img--light'
+                }`}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+            </div>
+
+            {/* Motivational text below feet */}
+            <div className={`relative z-20 mt-4 mx-auto flex flex-col items-center gap-1 text-center rounded-2xl border px-6 py-3 backdrop-blur-sm shadow-md ${
+              isDarkMode
+                ? 'bg-[#0F2C2B]/80 border-[#436661]/60'
+                : 'bg-white/80 border-[#D7720C]/25'
+            }`}>
+              <p className={`motivation-text text-[11px] font-bold tracking-[0.18em] uppercase ${isDarkMode ? 'text-[#F0A048]' : 'text-[#D7720C]'}`}>
+                Empowering People
+              </p>
+              <div className={`h-px w-8 rounded-full ${isDarkMode ? 'bg-[#436661]/60' : 'bg-[#D7720C]/30'}`} />
+              <p className={`motivation-text motivation-text--delay text-[10px] tracking-widest uppercase ${isDarkMode ? 'text-[#9BB2AD]' : 'text-[#738F8A]'}`}>
+                One Team at a Time
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -771,8 +837,8 @@ export default function App() {
         </div>
       </footer>
       <a
-        href={cvFile}
-        download="Suvadra_Kundu_CV.pptx.pdf"
+        href={profileImage}
+        download="Suvadra_Kundu_Profile.png"
         className={`${theme.primary} fixed bottom-5 right-5 z-40 text-white px-5 py-3 rounded-full shadow-xl md:hidden`}
       >
         CV
