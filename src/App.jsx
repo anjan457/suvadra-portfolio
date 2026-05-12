@@ -23,6 +23,9 @@ import {
 import profileImage from './assets/suv4.png';
 import cvFile from './assets/Suvadra_Kundu_CV.pptx.pdf';
 
+/** Hero / nav primary actions — cyan; rest of site uses orange theme.primary */
+const accentCtaClass = 'bg-[#78F5EF] text-[#0D2322] hover:bg-opacity-90';
+
 const quickStats = [
   { label: 'Years of Experience', value: 8, suffix: '+' },
   { label: 'Teams Trained', value: 20, suffix: '+' },
@@ -261,7 +264,7 @@ export default function App() {
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2.5 rounded-full border ${theme.line} hover:scale-105 transition`}>
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${theme.primary} text-white px-6 py-2.5 rounded-full hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg`}>
+            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${accentCtaClass} px-6 py-2.5 rounded-full transition-all shadow-md hover:shadow-lg`}>
               Get Started
             </button>
           </div>
@@ -286,7 +289,7 @@ export default function App() {
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-full py-2 rounded-xl border ${theme.line}`}>
               {isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
             </button>
-            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${theme.primary} text-white px-6 py-3 rounded-full w-full mt-4`}>
+            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${accentCtaClass} px-6 py-3 rounded-full w-full mt-4`}>
               Get Started
             </button>
           </div>
@@ -306,15 +309,15 @@ export default function App() {
             <span className={theme.text}>I transform complex data and daily operations into clear, people-first workflows that teams can trust.</span>
           </h2>
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center md:justify-start">
-            <a href="mailto:mailboxofsuvra@gmail.com" className={`${theme.primary} text-white px-8 py-4 rounded-full font-medium hover:bg-opacity-90 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto justify-center`}>
+            <a href="mailto:mailboxofsuvra@gmail.com" className={`${accentCtaClass} px-8 py-4 rounded-full font-medium transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto justify-center`}>
               <Mail size={20} />
               Let's talk
             </a>
             
             {/* Ekhane button er bodole anchor tag deya holo jate CV download hoy */}
             <a 
-              href={profileImage} 
-              download="Suvadra_Kundu_Profile.png" 
+              href={cvFile} 
+              download="Suvadra_Kundu_CV.pdf" 
               className={`bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
             >
               <Download size={20} />
@@ -775,7 +778,7 @@ export default function App() {
             <div>
               <h2 className="text-4xl md:text-6xl font-bold mb-6">Let's work <br/> together.</h2>
               <p className="text-xl text-[#738F8A] mb-8">Available for new work and direct inquiries.</p>
-              <a href="mailto:mailboxofsuvra@gmail.com" className={`inline-flex items-center gap-2 ${theme.primary} text-white px-8 py-4 rounded-full font-bold hover:bg-opacity-90 transition-all text-lg`}>
+              <a href="mailto:mailboxofsuvra@gmail.com" className={`inline-flex items-center gap-2 ${accentCtaClass} px-8 py-4 rounded-full font-bold transition-all text-lg`}>
                 Start a Conversation
                 <ArrowRight size={20} />
               </a>
@@ -815,7 +818,7 @@ export default function App() {
                 <input name="name" required placeholder="Your name" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
                 <input name="email" required type="email" placeholder="Your email" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
                 <textarea name="message" required rows={3} placeholder="Your message" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]"></textarea>
-                <button type="submit" className={`${theme.primary} text-white px-5 py-3 rounded-xl flex items-center gap-2`}>
+                <button type="submit" className={`${accentCtaClass} px-5 py-3 rounded-xl flex items-center gap-2`}>
                   <Send size={18} />
                   Send Message
                 </button>
@@ -839,9 +842,9 @@ export default function App() {
         </div>
       </footer>
       <a
-        href={profileImage}
-        download="Suvadra_Kundu_Profile.png"
-        className={`${theme.primary} fixed bottom-5 right-5 z-[55] text-white px-5 py-3 rounded-full shadow-xl md:hidden`}
+        href={cvFile}
+        download="Suvadra_Kundu_CV.pdf"
+        className={`${accentCtaClass} fixed bottom-5 right-5 z-[55] px-5 py-3 rounded-full shadow-xl md:hidden`}
       >
         CV
       </a>
