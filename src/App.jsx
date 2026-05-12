@@ -398,7 +398,7 @@ export default function App() {
               <img
                 src={profileImage}
                 alt="Suvadra Kundu"
-                className={`profile-3d-img relative z-10 mx-auto h-full w-full object-contain object-top scale-[1.12] ${
+                className={`profile-3d-img relative z-10 mx-auto h-full w-full object-contain object-top ${
                   isDarkMode ? 'profile-3d-img--dark' : 'profile-3d-img--light'
                 }`}
                 onError={(e) => {
