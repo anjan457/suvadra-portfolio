@@ -39,21 +39,56 @@ const quickStats = [
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
   const [isFormSent, setIsFormSent] = useState(false);
   const [animatedStats, setAnimatedStats] = useState([0, 0, 0]);
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [isGalleryGridOpen, setIsGalleryGridOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState('home');
+  const [showBackTop, setShowBackTop] = useState(false);
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
+  const [cvDownloads, setCvDownloads] = useState(() => parseInt(localStorage.getItem('cvDownloads') || '0'));
+  const [skillsVisible, setSkillsVisible] = useState(false);
+  const [animatedSkills, setAnimatedSkills] = useState([0, 0, 0, 0]);
+  const [cursorPos, setCursorPos] = useState({ x: -200, y: -200 });
+  const [cursorHover, setCursorHover] = useState(false);
 
-  // Navbar er scroll effect control korar jonno
+  useEffect(() => {
+    localStorage.setItem('darkMode', isDarkMode);
+  }, [isDarkMode]);
+
+  // Scroll: progress bar + back-to-top
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const scrolled = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(total > 0 ? (scrolled / total) * 100 : 0);
+      setIsScrolled(scrolled > 20);
+      setShowBackTop(scrolled > 400);
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Active section via IntersectionObserver
+  useEffect(() => {
+    const sectionIds = ['home','services','projects','gallery','experience','certifications','education','languages','faq','contact'];
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+    );
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
   }, []);
 
   useEffect(() => {
@@ -251,19 +286,83 @@ export default function App() {
     const frameMs = 24;
     const steps = Math.max(1, Math.floor(maxDuration / frameMs));
     let currentStep = 0;
-
     const timer = setInterval(() => {
       currentStep += 1;
       setAnimatedStats(targets.map((target) => Math.min(target, Math.ceil((target * currentStep) / steps))));
       if (currentStep >= steps) clearInterval(timer);
     }, frameMs);
-
     return () => clearInterval(timer);
   }, []);
 
+  // Testimonial auto-slide
+  useEffect(() => {
+    const t = setInterval(() => setTestimonialIdx(p => (p + 1) % testimonials.length), 3500);
+    return () => clearInterval(t);
+  }, []);
+
+  // Skills animate on scroll
+  useEffect(() => {
+    if (!skillsVisible) return;
+    const skillValues = skills.map(s => s.value);
+    const steps = 40;
+    let step = 0;
+    const t = setInterval(() => {
+      step++;
+      setAnimatedSkills(skillValues.map(v => Math.min(v, Math.ceil((v * step) / steps))));
+      if (step >= steps) clearInterval(t);
+    }, 20);
+    return () => clearInterval(t);
+  }, [skillsVisible]);
+
+  // Skills section observer
+  useEffect(() => {
+    const el = document.getElementById('skills-section');
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setSkillsVisible(true); }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // Custom cursor
+  useEffect(() => {
+    const move = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
+    const over = (e) => { if (e.target.closest('a,button,[role="button"]')) setCursorHover(true); };
+    const out  = ()  => setCursorHover(false);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseover', over);
+    window.addEventListener('mouseout', out);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseover', over);
+      window.removeEventListener('mouseout', out);
+    };
+  }, []);
+
+  const handleCvDownload = () => {
+    const next = cvDownloads + 1;
+    setCvDownloads(next);
+    localStorage.setItem('cvDownloads', next);
+  };
+
   return (
     <div className={`min-h-screen ${theme.bg} ${theme.text} font-sans transition-colors duration-300 selection:bg-[#738F8A] selection:text-white`}>
-      
+
+      {/* Scroll progress bar */}
+      <div className="fixed top-0 left-0 z-[60] h-[3px] w-full bg-transparent">
+        <div className="h-full bg-gradient-to-r from-[#2A7A6F] via-[#D7720C] to-[#2A7A6F] transition-all duration-100 ease-out" style={{ width: `${scrollProgress}%` }} />
+      </div>
+
+      {/* Back to top */}
+      {showBackTop && (
+        <button
+          onClick={(e) => scrollToSection(e, 'home')}
+          className={`fixed bottom-5 right-5 z-[55] w-11 h-11 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${isDarkMode ? 'bg-[#193433] text-[#EAF1EF] border border-[#436661]/60' : 'bg-white text-[#0D2322] border border-[#E4E8E7]'}`}
+          aria-label="Back to top"
+        >
+          <ArrowRight className="-rotate-90" size={18} />
+        </button>
+      )}
+
       {/* Navigation Bar */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? `${isDarkMode ? 'bg-[#081616]/90' : 'bg-[#F5F4ED]/90'} backdrop-blur-md shadow-sm py-4` : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
@@ -273,18 +372,34 @@ export default function App() {
           
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8 font-medium">
-            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Services</a>
-            <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Projects</a>
-            <a href="#gallery" onClick={(e) => scrollToSection(e, 'gallery')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Gallery</a>
-            <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Experience</a>
-            <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Credentials</a>
-            <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Education</a>
-            <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className="hover:text-[#D7720C] transition-colors cursor-pointer">Language</a>
-            <a href="#faq" onClick={(e) => scrollToSection(e, 'faq')} className="hover:text-[#D7720C] transition-colors cursor-pointer">FAQ</a>
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2.5 rounded-full border ${theme.line} hover:scale-105 transition`}>
+            {[
+              { label: 'Services', id: 'services' },
+              { label: 'Projects', id: 'projects' },
+              { label: 'Gallery', id: 'gallery' },
+              { label: 'Experience', id: 'experience' },
+              { label: 'Credentials', id: 'certifications' },
+              { label: 'Education', id: 'education' },
+              { label: 'Language', id: 'languages' },
+              { label: 'FAQ', id: 'faq' },
+            ].map(({ label, id }, i) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                onClick={(e) => scrollToSection(e, id)}
+                className="nav-link cursor-pointer"
+                style={{
+                  animationDelay: `${i * 0.07}s`,
+                  color: activeSection === id ? '#2A7A6F' : undefined,
+                }}
+              >
+                {label}
+                <span className="nav-link-underline" style={{ width: activeSection === id ? '100%' : undefined, background: activeSection === id ? '#2A7A6F' : undefined }} />
+              </a>
+            ))}
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2.5 rounded-full border ${theme.line} hover:scale-110 hover:rotate-12 transition-all duration-300`}>
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${accentCtaClass} px-6 py-2.5 rounded-full transition-all shadow-md hover:shadow-lg`}>
+            <button onClick={(e) => scrollToSection(e, 'contact')} className={`${accentCtaClass} px-6 py-2.5 rounded-full transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 hover:scale-105`}>
               Get Started
             </button>
           </div>
@@ -344,13 +459,19 @@ export default function App() {
             </a>
             
             {/* Ekhane button er bodole anchor tag deya holo jate CV download hoy */}
-            <a 
-              href={cvFile} 
-              download="Suvadra_Kundu_CV.pdf" 
-              className={`bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
+            <a
+              href={cvFile}
+              download="Suvadra_Kundu_CV.pdf"
+              onClick={handleCvDownload}
+              className={`relative bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
             >
               <Download size={20} />
               Download CV
+              {cvDownloads > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#D7720C] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cvDownloads}
+                </span>
+              )}
             </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
@@ -518,14 +639,29 @@ export default function App() {
       </section>
 
       <section id="gallery" data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
-        <div className="mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold">Photo Gallery</h2>
-          <p className={`${theme.mutedText} mt-3`}>Training, coordination, and professional highlights.</p>
+        {/* Animated heading */}
+        <div className="mb-12 relative">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="gallery-line-anim h-px w-10 bg-[#D7720C]" />
+            <span className={`text-xs font-bold tracking-widest uppercase ${isDarkMode ? 'text-[#F0A048]' : 'text-[#D7720C]'}`}>Portfolio</span>
+          </div>
+          <h2 className="gallery-title-anim text-4xl md:text-5xl font-bold">
+            Photo{' '}
+            <span className="gallery-shimmer-text">Gallery</span>
+          </h2>
+          <p className={`${theme.mutedText} mt-3 gallery-sub-anim`}>Training, coordination, and professional highlights.</p>
+          {/* Floating decorative dots */}
+          <div aria-hidden className="pointer-events-none absolute -top-4 right-0 flex gap-1.5">
+            {[0,1,2,3,4].map(i => (
+              <span key={i} className="gallery-dot-float inline-block h-1.5 w-1.5 rounded-full bg-[#D7720C]/40" style={{ animationDelay: `${i * 0.2}s` }} />
+            ))}
+          </div>
         </div>
-        <div className={`rounded-3xl overflow-hidden border ${theme.line} ${theme.cardBg} shadow-sm`}>
+
+        <div className={`rounded-3xl overflow-hidden border ${theme.line} ${theme.cardBg} shadow-sm gallery-card-anim`}>
           <button
             onClick={() => setIsGalleryGridOpen(true)}
-            className="relative w-full text-left"
+            className="relative w-full text-left group overflow-hidden"
           >
             <img
               key={`gallery-main-${activeGalleryIndex}`}
@@ -534,30 +670,48 @@ export default function App() {
               className="h-[320px] md:h-[460px] w-full object-contain bg-[#0D2322]/5 gallery-fade-in"
               loading="lazy"
             />
-            <span className="absolute top-4 right-4 rounded-full bg-black/60 text-white px-3 py-1 text-sm">
+            {/* Hover overlay */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
+              <span className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100 bg-white/90 text-[#0D2322] text-sm font-bold px-4 py-2 rounded-full shadow-lg">
+                View All
+              </span>
+            </div>
+            <span className="absolute top-4 right-4 rounded-full bg-black/60 text-white px-3 py-1 text-sm gallery-counter-anim">
               {activeGalleryIndex + 1}/{galleryItems.length}
             </span>
           </button>
+
           <div className="p-5 md:p-6 flex items-center justify-between gap-4">
-            <div>
+            <div className="gallery-info-anim">
               <p className="text-xl font-bold">{galleryItems[activeGalleryIndex].title}</p>
               <p className={`text-sm mt-1 ${theme.mutedText}`}>{galleryItems[activeGalleryIndex].subtitle}</p>
             </div>
             <div className="flex gap-2">
-              <button onClick={prevGallery} className={`h-10 w-10 rounded-full border ${theme.line} flex items-center justify-center`}>
+              <button
+                onClick={prevGallery}
+                className={`gallery-nav-btn h-10 w-10 rounded-full border ${theme.line} flex items-center justify-center hover:bg-[#D7720C] hover:text-white hover:border-[#D7720C] transition-all duration-200 active:scale-90`}
+              >
                 <ChevronLeft size={18} />
               </button>
-              <button onClick={nextGallery} className={`h-10 w-10 rounded-full border ${theme.line} flex items-center justify-center`}>
+              <button
+                onClick={nextGallery}
+                className={`gallery-nav-btn h-10 w-10 rounded-full border ${theme.line} flex items-center justify-center hover:bg-[#D7720C] hover:text-white hover:border-[#D7720C] transition-all duration-200 active:scale-90`}
+              >
                 <ChevronRight size={18} />
               </button>
             </div>
           </div>
+
           <div className="px-5 pb-5 md:px-6 md:pb-6 flex flex-wrap gap-2">
             {galleryItems.map((_, idx) => (
               <button
                 key={`dot-${idx}`}
                 onClick={() => setActiveGalleryIndex(idx)}
-                className={`h-2.5 rounded-full transition-all ${idx === activeGalleryIndex ? 'w-8 bg-[#D7720C]' : `w-2.5 ${isDarkMode ? 'bg-[#436661]' : 'bg-[#CAD6D3]'}`}`}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  idx === activeGalleryIndex
+                    ? 'w-8 bg-[#D7720C] gallery-dot-active'
+                    : `w-2.5 hover:w-5 ${isDarkMode ? 'bg-[#436661] hover:bg-[#738F8A]' : 'bg-[#CAD6D3] hover:bg-[#738F8A]'}`
+                }`}
                 aria-label={`Show gallery image ${idx + 1}`}
               />
             ))}
@@ -565,19 +719,19 @@ export default function App() {
         </div>
       </section>
 
-      <section data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
+      <section id="skills-section" data-reveal className="reveal py-24 px-6 md:px-12 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm`}>
             <h3 className="text-3xl font-bold mb-6">Core Skills</h3>
             <div className="space-y-5">
-              {skills.map((skill) => (
+              {skills.map((skill, idx) => (
                 <div key={skill.name}>
                   <div className="flex justify-between mb-2 text-sm font-semibold">
                     <span>{skill.name}</span>
-                    <span>{skill.value}%</span>
+                    <span>{animatedSkills[idx] || 0}%</span>
                   </div>
                   <div className={`h-2 rounded-full ${isDarkMode ? 'bg-[#193433]' : 'bg-[#E3E7E5]'}`}>
-                    <div className="h-2 rounded-full bg-[#D7720C]" style={{ width: `${skill.value}%` }}></div>
+                    <div className="h-2 rounded-full bg-gradient-to-r from-[#2A7A6F] to-[#D7720C] transition-all duration-300 ease-out" style={{ width: `${animatedSkills[idx] || 0}%` }} />
                   </div>
                 </div>
               ))}
@@ -603,14 +757,29 @@ export default function App() {
               </ul>
             </div>
           </div>
-          <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm`}>
+          <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm flex flex-col`}>
             <h3 className="text-3xl font-bold mb-6">Testimonials</h3>
-            <div className="space-y-4">  
-              {testimonials.map((item) => (
-                <blockquote key={item.author} className={`rounded-2xl p-5 ${theme.softCard}`}>
-                  <p className="leading-relaxed">"{item.quote}"</p>
-                  <footer className={`mt-3 text-sm font-semibold ${theme.primaryText}`}>- {item.author}</footer>
+            <div className="relative flex-1 overflow-hidden">
+              {testimonials.map((item, idx) => (
+                <blockquote
+                  key={item.author}
+                  className={`absolute inset-0 rounded-2xl p-5 ${theme.softCard} transition-all duration-500 ${
+                    idx === testimonialIdx ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
+                  }`}
+                >
+                  <p className="leading-relaxed text-lg">"{item.quote}"</p>
+                  <footer className={`mt-4 text-sm font-semibold ${theme.primaryText}`}>— {item.author}</footer>
                 </blockquote>
+              ))}
+            </div>
+            {/* Dots */}
+            <div className="flex gap-2 mt-6">
+              {testimonials.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setTestimonialIdx(idx)}
+                  className={`h-2 rounded-full transition-all duration-300 ${idx === testimonialIdx ? 'w-6 bg-[#D7720C]' : `w-2 ${isDarkMode ? 'bg-[#436661]' : 'bg-[#CAD6D3]'}`}`}
+                />
               ))}
             </div>
           </div>
@@ -893,29 +1062,58 @@ export default function App() {
       >
         CV
       </a>
-      <a
-        href="mailto:mailboxofsuvra@gmail.com"
-        aria-label="Email Suvadra"
-        className="fixed bottom-20 left-5 z-[55] bg-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center border border-black/5 hover:scale-105 transition-transform"
-      >
-        <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
-          <path fill="#EA4335" d="M1.5 5.5v13h4.2V9.1L1.5 5.5z" />
-          <path fill="#34A853" d="M18.3 9.1v9.4h4.2v-13l-4.2 3.6z" />
-          <path fill="#FBBC05" d="M18.3 18.5H5.7V9.1L12 14l6.3-4.9v9.4z" />
-          <path fill="#4285F4" d="M22.5 5.5L12 14 1.5 5.5 3.8 4h16.4l2.3 1.5z" />
-        </svg>
-      </a>
-      <a
-        href="https://wa.me/8801327274392"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="WhatsApp Suvadra"
-        className="fixed bottom-5 left-5 z-[55] bg-[#25D366] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform"
-      >
-        <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
-          <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
-        </svg>
-      </a>
+      {/* Floating social buttons — left side */}
+      <div className="fixed left-5 bottom-5 z-[55] flex flex-col gap-3">
+        {/* Gmail */}
+        <a
+          href="mailto:mailboxofsuvra@gmail.com"
+          aria-label="Email Suvadra"
+          className="social-fab bg-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center border border-black/5 hover:scale-110 hover:-translate-y-1 transition-all duration-200"
+        >
+          <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
+            <path fill="#EA4335" d="M1.5 5.5v13h4.2V9.1L1.5 5.5z" />
+            <path fill="#34A853" d="M18.3 9.1v9.4h4.2v-13l-4.2 3.6z" />
+            <path fill="#FBBC05" d="M18.3 18.5H5.7V9.1L12 14l6.3-4.9v9.4z" />
+            <path fill="#4285F4" d="M22.5 5.5L12 14 1.5 5.5 3.8 4h16.4l2.3 1.5z" />
+          </svg>
+        </a>
+        {/* WhatsApp */}
+        <a
+          href="https://wa.me/8801327274392"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="WhatsApp Suvadra"
+          className="social-fab bg-[#25D366] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-110 hover:-translate-y-1 transition-all duration-200"
+        >
+          <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
+            <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
+          </svg>
+        </a>
+        {/* LinkedIn */}
+        <a
+          href="https://www.linkedin.com/in/sk-shuvra/"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="LinkedIn Suvadra"
+          className="social-fab bg-[#0A66C2] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-110 hover:-translate-y-1 transition-all duration-200"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        {/* X (Twitter) */}
+        <a
+          href="https://x.com/suvadrakundu"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="X Suvadra"
+          className="social-fab bg-black text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-110 hover:-translate-y-1 transition-all duration-200"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+          </svg>
+        </a>
+      </div>
       {isGalleryGridOpen && (
         <div
           className="fixed inset-0 z-[70] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
