@@ -759,16 +759,17 @@ export default function App() {
           </div>
           <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm flex flex-col`}>
             <h3 className="text-3xl font-bold mb-6">Testimonials</h3>
-            <div className="relative flex-1 overflow-hidden">
+            {/* min-h: absolute blockquotes don't contribute to height — without this the carousel collapses on mobile */}
+            <div className="relative min-h-[260px] flex-1 overflow-hidden sm:min-h-[280px]">
               {testimonials.map((item, idx) => (
                 <blockquote
                   key={item.author}
-                  className={`absolute inset-0 rounded-2xl p-5 ${theme.softCard} transition-all duration-500 ${
+                  className={`absolute inset-0 flex flex-col rounded-2xl p-5 ${theme.softCard} transition-all duration-500 ${
                     idx === testimonialIdx ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
                   }`}
                 >
                   <p className="leading-relaxed text-lg">"{item.quote}"</p>
-                  <footer className={`mt-4 text-sm font-semibold ${theme.primaryText}`}>— {item.author}</footer>
+                  <footer className={`mt-4 shrink-0 text-sm font-semibold ${theme.primaryText}`}>— {item.author}</footer>
                 </blockquote>
               ))}
             </div>
