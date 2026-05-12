@@ -332,8 +332,9 @@ export default function App() {
         </div>
         
         {/* Hero portrait — 3D floating PNG (no frame) */}
-        <div className="flex flex-1 justify-center md:justify-end md:pr-2">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-[320px] translate-x-1 overflow-visible md:mx-0 md:max-w-[24rem] md:-translate-x-6 lg:-translate-x-8">
+        <div className="flex w-full flex-1 justify-center md:w-auto md:justify-end md:pr-2">
+          {/* No aspect-[3/4] here — inner .profile-3d-stage keeps ratio; outer must grow so the tagline box does not overflow onto the heading (mobile). */}
+          <div className="relative mx-auto w-full max-w-[320px] translate-x-1 overflow-visible md:mx-0 md:max-w-[24rem] md:-translate-x-6 lg:-translate-x-8">
             {/* Orbit rings around portrait */}
             <div aria-hidden className="pointer-events-none absolute inset-0 z-[2]">
               <div className="absolute left-1/2 top-[44%] flex h-[74%] w-[74%] max-h-[19rem] max-w-[19rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
