@@ -27,8 +27,8 @@ import galleryPhotoProgram from './photo_gallery/program_delivery.png';
 import galleryPhotoWorkspace from './photo_gallery/workspace.png';
 import galleryPhotoHighlight from './photo_gallery/e0c84321-8def-40c9-bc91-d0560519421e.png';
 
-/** Hero / nav primary actions — cyan; rest of site uses orange theme.primary */
-const accentCtaClass = 'bg-[#78F5EF] text-[#0D2322] hover:bg-opacity-90';
+/** Primary CTAs — same indigo family as hero “Kundu” */
+const accentCtaClass = 'bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors';
 
 const quickStats = [
   { label: 'Years of Experience', value: 8, suffix: '+' },
@@ -267,7 +267,7 @@ export default function App() {
       {/* Navigation Bar */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? `${isDarkMode ? 'bg-[#081616]/90' : 'bg-[#F5F4ED]/90'} backdrop-blur-md shadow-sm py-4` : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-          <div className="text-2xl font-bold tracking-tighter cursor-pointer" onClick={(e) => scrollToSection(e, 'home')}>
+          <div className="font-name-display text-2xl font-semibold tracking-tight cursor-pointer" onClick={(e) => scrollToSection(e, 'home')}>
             Suvadra<span className={theme.primaryText}>.</span>
           </div>
           
@@ -321,11 +321,15 @@ export default function App() {
         <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#D7720C]/10 blur-3xl"></div>
         <div className="pointer-events-none absolute bottom-0 -left-24 h-72 w-72 rounded-full bg-[#738F8A]/20 blur-3xl"></div>
         <div className="relative z-20 flex-1 space-y-8 text-center md:text-left">
-          <h1 className="leading-[1.08] tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-            <span className="block text-5xl md:text-7xl font-black italic">
+          <h1 className="font-name-display leading-[1.08] tracking-tight">
+            <span className="block text-5xl md:text-7xl font-semibold">
               Suvadra
             </span>
-            <span className="block text-6xl md:text-8xl font-black not-italic text-[#2A7A6F]">
+            <span
+              className={`block text-6xl md:text-8xl font-bold ${
+                isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'
+              }`}
+            >
               Kundu
             </span>
           </h1>
@@ -392,14 +396,30 @@ export default function App() {
 
             {/* Floating info badges */}
             {/* Top-left: NSDA badge */}
-            <div className={`absolute -left-6 top-8 z-20 flex items-center gap-2 rounded-2xl px-3 py-2 shadow-xl backdrop-blur-md ${isDarkMode ? 'bg-[#112928]/90 border border-[#436661]/60 text-[#EAF1EF]' : 'bg-white/90 border border-[#D7720C]/20 text-[#0D2322]'}`}>
-              <Award size={16} className="text-[#D7720C]" />
-              <span className="text-xs font-bold">NSDA Level 4</span>
+            <div
+              className={`absolute -left-6 top-8 z-20 flex items-center gap-2 rounded-2xl px-3 py-2 shadow-xl backdrop-blur-md ${
+                isDarkMode
+                  ? 'bg-[#112928]/90 border border-[#A5B4FC]/35 text-[#EAF1EF]'
+                  : 'bg-white/90 border border-[#4F46E5]/25 text-[#0D2322]'
+              }`}
+            >
+              <Award size={16} className={isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'} />
+              <span className={`text-xs font-bold ${isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'}`}>NSDA Level 4</span>
             </div>
             {/* Top-right: Experience */}
-            <div className={`absolute -right-4 top-20 z-20 flex flex-col items-center rounded-2xl px-4 py-3 shadow-xl backdrop-blur-md ${isDarkMode ? 'bg-[#112928]/90 border border-[#436661]/60 text-[#EAF1EF]' : 'bg-white/90 border border-[#738F8A]/20 text-[#0D2322]'}`}>
-              <span className="text-xl font-extrabold text-[#D7720C]">8+</span>
-              <span className="text-[10px] font-semibold leading-tight text-center">Years Exp.</span>
+            <div
+              className={`absolute -right-4 top-20 z-20 flex flex-col items-center rounded-2xl px-4 py-3 shadow-xl backdrop-blur-md ${
+                isDarkMode
+                  ? 'bg-[#112928]/90 border border-[#A5B4FC]/35 text-[#EAF1EF]'
+                  : 'bg-white/90 border border-[#4F46E5]/25 text-[#0D2322]'
+              }`}
+            >
+              <span className={`text-xl font-extrabold ${isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'}`}>8+</span>
+              <span
+                className={`text-[10px] font-semibold leading-tight text-center ${isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'}`}
+              >
+                Years Exp.
+              </span>
             </div>
 
             <div className="profile-3d-stage relative z-10 aspect-[3/4] w-full">
@@ -436,14 +456,14 @@ export default function App() {
             {/* Motivational text below feet */}
             <div className={`relative z-20 mt-4 mx-auto flex flex-col items-center gap-1 text-center rounded-2xl border px-6 py-3 backdrop-blur-sm shadow-md ${
               isDarkMode
-                ? 'bg-[#0F2C2B]/80 border-[#436661]/60'
-                : 'bg-white/80 border-[#D7720C]/25'
+                ? 'bg-[#0F2C2B]/80 border-[#A5B4FC]/35'
+                : 'bg-white/80 border-[#4F46E5]/25'
             }`}>
-              <p className={`motivation-text text-[11px] font-bold tracking-[0.18em] uppercase ${isDarkMode ? 'text-[#F0A048]' : 'text-[#D7720C]'}`}>
+              <p className={`motivation-text text-[11px] font-bold tracking-[0.18em] uppercase ${isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'}`}>
                 Empowering People
               </p>
-              <div className={`h-px w-8 rounded-full ${isDarkMode ? 'bg-[#436661]/60' : 'bg-[#D7720C]/30'}`} />
-              <p className={`motivation-text motivation-text--delay text-[10px] tracking-widest uppercase ${isDarkMode ? 'text-[#D4EBE7]' : 'text-[#2F5D50]'}`}>
+              <div className={`h-px w-8 rounded-full ${isDarkMode ? 'bg-[#A5B4FC]/45' : 'bg-[#4F46E5]/35'}`} />
+              <p className={`motivation-text motivation-text--delay text-[10px] tracking-widest uppercase ${isDarkMode ? 'text-[#A5B4FC]' : 'text-[#4F46E5]'}`}>
                 One Team at a Time
               </p>
             </div>

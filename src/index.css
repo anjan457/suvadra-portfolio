@@ -12,6 +12,12 @@ body {
   font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Hero & brand: professional display for the name */
+.font-name-display {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+}
+
 html {
   scroll-behavior: smooth;
 }
