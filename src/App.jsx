@@ -414,7 +414,7 @@ export default function App() {
                 Empowering People
               </p>
               <div className={`h-px w-8 rounded-full ${isDarkMode ? 'bg-[#436661]/60' : 'bg-[#D7720C]/30'}`} />
-              <p className={`motivation-text motivation-text--delay text-[10px] tracking-widest uppercase ${isDarkMode ? 'text-[#9BB2AD]' : 'text-[#738F8A]'}`}>
+              <p className={`motivation-text motivation-text--delay text-[10px] tracking-widest uppercase ${isDarkMode ? 'text-[#D4EBE7]' : 'text-[#2F5D50]'}`}>
                 One Team at a Time
               </p>
             </div>
