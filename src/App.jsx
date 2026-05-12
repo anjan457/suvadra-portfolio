@@ -22,6 +22,10 @@ import {
 } from 'lucide-react';
 import profileImage from './assets/suv4.png';
 import cvFile from './assets/Suvadra_Kundu_CV.pptx.pdf';
+import galleryPhotoTeam from './photo_gallery/Team_collaboration.png';
+import galleryPhotoProgram from './photo_gallery/program_delivery.png';
+import galleryPhotoWorkspace from './photo_gallery/workspace.png';
+import galleryPhotoHighlight from './photo_gallery/e0c84321-8def-40c9-bc91-d0560519421e.png';
 
 /** Hero / nav primary actions — cyan; rest of site uses orange theme.primary */
 const accentCtaClass = 'bg-[#78F5EF] text-[#0D2322] hover:bg-opacity-90';
@@ -165,10 +169,26 @@ export default function App() {
     { name: 'Hindi', level: 'Proficient (Speaking & Listening)', value: 65 },
   ];
   const galleryItems = [
-    { title: 'Training Session', subtitle: 'Facilitating practical group learning', src: profileImage },
-    { title: 'Professional Portrait', subtitle: 'Personal brand and profile highlight', src: profileImage },
-    { title: 'Team Collaboration', subtitle: 'Coordinating cross-functional activities', src: profileImage },
-    { title: 'Program Delivery', subtitle: 'Structured service and communication', src: profileImage },
+    {
+      title: 'Team collaboration',
+      subtitle: 'Modern office, brainstorming, and working together',
+      src: galleryPhotoTeam,
+    },
+    {
+      title: 'Program delivery',
+      subtitle: 'Leading meetings, milestones, and clear communication',
+      src: galleryPhotoProgram,
+    },
+    {
+      title: 'Workspace',
+      subtitle: 'Professional environment and day-to-day coordination',
+      src: galleryPhotoWorkspace,
+    },
+    {
+      title: 'Professional highlight',
+      subtitle: 'Training, service, and teamwork in focus',
+      src: galleryPhotoHighlight,
+    },
   ];
   const faqItems = [
     {
@@ -301,8 +321,13 @@ export default function App() {
         <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#D7720C]/10 blur-3xl"></div>
         <div className="pointer-events-none absolute bottom-0 -left-24 h-72 w-72 rounded-full bg-[#738F8A]/20 blur-3xl"></div>
         <div className="relative z-20 flex-1 space-y-8 text-center md:text-left">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
-            Suvadra <br className="hidden md:block"/> Kundu
+          <h1 className="leading-[1.08] tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <span className="block text-5xl md:text-7xl font-black italic">
+              Suvadra
+            </span>
+            <span className="block text-6xl md:text-8xl font-black not-italic text-[#2A7A6F]">
+              Kundu
+            </span>
           </h1>
           <h2 className={`text-xl md:text-2xl ${theme.accent} font-medium leading-relaxed max-w-2xl`}>
             Professional Client Coordinator & Lead Trainer. <br/>
@@ -444,8 +469,8 @@ export default function App() {
               { title: "Food & Beverage Operations", icon: <Briefcase size={32} />, desc: "Supporting smooth kitchen workflow, food quality control, and efficient team coordination for consistent service delivery." },
               { title: "Digital Marketing", icon: <TrendingUp size={32} />, desc: "Strategic growth using Facebook Blueprint and Google Digital Garage tools." }
             ].map((service, idx) => (
-              <div key={idx} className="bg-[#1A3332] p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 border border-[#738F8A]/20 hover:border-[#D7720C] hover:shadow-xl">
-                <div className={`${theme.primaryText} mb-6`}>{service.icon}</div>
+              <div key={idx} className="bg-[#1A3332] p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 border border-[#738F8A]/20 hover:border-[#2A7A6F] hover:shadow-xl">
+                <div className="text-[#2A7A6F] mb-6">{service.icon}</div>
                 <h3 className="text-xl font-bold mb-3">{service.title}</h3>
                 <p className="text-[#738F8A] leading-relaxed">{service.desc}</p>
               </div>
