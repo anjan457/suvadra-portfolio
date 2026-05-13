@@ -212,19 +212,14 @@ export default function App() {
       src: galleryPhotoCookingTrainer,
     },
     {
-      title: 'Cooking class',
-      subtitle: 'Skill-focused culinary training in a structured session',
-      src: galleryPhotoCookingClass,
-    },
-    {
-      title: 'Cooking session',
-      subtitle: 'Demonstration-led learning with real workflow practice',
-      src: galleryPhotoCookingSession,
-    },
-    {
       title: 'Team collaboration',
       subtitle: 'Modern office, brainstorming, and working together',
       src: galleryPhotoTeam,
+    },
+    {
+      title: 'Cooking class',
+      subtitle: 'Skill-focused culinary training in a structured session',
+      src: galleryPhotoCookingClass,
     },
     {
       title: 'Program delivery',
@@ -240,6 +235,11 @@ export default function App() {
       title: 'Professional highlight',
       subtitle: 'Training, service, and teamwork in focus',
       src: galleryPhotoHighlight,
+    },
+    {
+      title: 'Cooking session',
+      subtitle: 'Demonstration-led learning with real workflow practice',
+      src: galleryPhotoCookingSession,
     },
   ];
   const faqItems = [
