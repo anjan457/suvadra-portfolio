@@ -12,7 +12,6 @@ import {
   Menu, 
   X, 
   MapPin, 
-  Phone,
   MessageCircle,
   TrendingUp,
   Sun,
@@ -75,7 +74,7 @@ export default function App() {
 
   // Active section via IntersectionObserver
   useEffect(() => {
-    const sectionIds = ['home','services','projects','gallery','experience','certifications','education','languages','faq','contact'];
+    const sectionIds = ['home', 'services', 'projects', 'gallery', 'experience', 'certifications', 'education', 'languages', 'faq', 'contact'];
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -240,7 +239,7 @@ export default function App() {
     },
     {
       q: 'Can we contact you directly for an interview?',
-      a: 'Absolutely. You can contact me by email, WhatsApp, or the quick message form on this website.',
+      a: 'Absolutely. You can contact me by email or the quick message form on this website.',
     },
   ];
 
@@ -367,7 +366,7 @@ export default function App() {
       <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? `${isDarkMode ? 'bg-[#081616]/90' : 'bg-[#F5F4ED]/90'} backdrop-blur-md shadow-sm py-4` : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
           <div className="font-name-display text-2xl font-semibold tracking-tight cursor-pointer" onClick={(e) => scrollToSection(e, 'home')}>
-            Suvadra<span className={theme.primaryText}>.</span>
+            Suvadra<span className="text-[#2A7A6F]">.</span>
           </div>
           
           {/* Desktop Nav */}
@@ -1004,10 +1003,6 @@ export default function App() {
                 <div className="p-3 bg-[#1A3332] rounded-full group-hover:bg-[#D7720C]/20 transition-colors"><Mail size={24} /></div>
                 mailboxofsuvra@gmail.com
               </a>
-              <div className="flex items-center gap-4 text-xl group">
-                <div className="p-3 bg-[#1A3332] rounded-full"><Phone size={24} className="text-[#F5F4ED]" /></div>
-                +880 1327 274392
-              </div>
               <div className="flex items-center gap-4 text-xl text-[#738F8A] group">
                 <div className="p-3 bg-[#1A3332] rounded-full"><MapPin size={24} className="text-[#F5F4ED]"/></div>
                 Boalmari, Faridpur, Bangladesh
@@ -1076,18 +1071,6 @@ export default function App() {
             <path fill="#34A853" d="M18.3 9.1v9.4h4.2v-13l-4.2 3.6z" />
             <path fill="#FBBC05" d="M18.3 18.5H5.7V9.1L12 14l6.3-4.9v9.4z" />
             <path fill="#4285F4" d="M22.5 5.5L12 14 1.5 5.5 3.8 4h16.4l2.3 1.5z" />
-          </svg>
-        </a>
-        {/* WhatsApp */}
-        <a
-          href="https://wa.me/8801327274392"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="WhatsApp Suvadra"
-          className="social-fab bg-[#25D366] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:scale-110 hover:-translate-y-1 transition-all duration-200"
-        >
-          <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
-            <path d="M19.11 17.21c-.29-.15-1.72-.85-1.98-.95-.27-.1-.46-.15-.65.15-.2.29-.75.94-.92 1.13-.17.2-.34.22-.63.08-.29-.15-1.21-.44-2.31-1.39-.85-.76-1.43-1.69-1.6-1.98-.17-.29-.02-.45.13-.6.14-.14.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.02-.51-.08-.15-.65-1.57-.9-2.15-.24-.57-.48-.49-.65-.5h-.56c-.2 0-.51.08-.78.37-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.03c.15.2 2.07 3.16 5.01 4.43.7.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.72-.7 1.96-1.39.24-.68.24-1.26.17-1.39-.07-.12-.27-.2-.56-.34zM16.02 5.33c-5.88 0-10.66 4.78-10.66 10.66 0 1.87.49 3.7 1.41 5.32L5.3 26.67l5.53-1.45c1.57.86 3.34 1.31 5.19 1.31h.01c5.88 0 10.66-4.78 10.66-10.66 0-2.85-1.11-5.53-3.12-7.54-2.01-2-4.69-3-7.55-3zm0 19.31h-.01c-1.58 0-3.12-.43-4.46-1.23l-.32-.19-3.28.86.87-3.19-.21-.33a8.73 8.73 0 0 1-1.34-4.67c0-4.82 3.92-8.74 8.75-8.74 2.34 0 4.54.91 6.2 2.57a8.7 8.7 0 0 1 2.55 6.19c0 4.82-3.92 8.74-8.75 8.74z" />
           </svg>
         </a>
         {/* LinkedIn */}
