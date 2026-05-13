@@ -25,6 +25,9 @@ import galleryPhotoTeam from './photo_gallery/Team_collaboration.png';
 import galleryPhotoProgram from './photo_gallery/program_delivery.png';
 import galleryPhotoWorkspace from './photo_gallery/workspace.png';
 import galleryPhotoHighlight from './photo_gallery/e0c84321-8def-40c9-bc91-d0560519421e.png';
+import galleryPhotoCookingClass from './photo_gallery/cooking_class.png';
+import galleryPhotoCookingTrainer from './photo_gallery/cooking_trainer.png';
+import galleryPhotoCookingSession from './photo_gallery/7f0f5271-38ce-48c2-a30a-9b92745bdba6.png';
 
 /** Primary CTAs — same indigo family as hero “Kundu” */
 const accentCtaClass = 'bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors';
@@ -203,6 +206,21 @@ export default function App() {
     { name: 'Hindi', level: 'Proficient (Speaking & Listening)', value: 65 },
   ];
   const galleryItems = [
+    {
+      title: 'Cooking trainer',
+      subtitle: 'Hands-on kitchen guidance and practical instruction',
+      src: galleryPhotoCookingTrainer,
+    },
+    {
+      title: 'Cooking class',
+      subtitle: 'Skill-focused culinary training in a structured session',
+      src: galleryPhotoCookingClass,
+    },
+    {
+      title: 'Cooking session',
+      subtitle: 'Demonstration-led learning with real workflow practice',
+      src: galleryPhotoCookingSession,
+    },
     {
       title: 'Team collaboration',
       subtitle: 'Modern office, brainstorming, and working together',
