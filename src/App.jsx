@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mail, 
   Download, 
@@ -45,6 +45,7 @@ export default function App() {
   const [isFormSent, setIsFormSent] = useState(false);
   const [animatedStats, setAnimatedStats] = useState([0, 0, 0]);
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [isGalleryImageLoading, setIsGalleryImageLoading] = useState(true);
   const [isGalleryGridOpen, setIsGalleryGridOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -60,6 +61,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('darkMode', isDarkMode);
   }, [isDarkMode]);
+
+  useEffect(() => {
+    setIsGalleryImageLoading(true);
+  }, [activeGalleryIndex]);
 
   // Scroll: progress bar + back-to-top
   useEffect(() => {
@@ -190,14 +195,21 @@ export default function App() {
     'Email & Calendar Management',
     'Documentation & Reporting',
   ];
+  const additionalSkills = [
+    'Poetry Recitation',
+  ];
   const testimonials = [
     {
       quote: 'Suvadra consistently keeps communication clear and ensures every task is completed on time.',
       author: 'Operations Supervisor',
     },
     {
-      quote: 'Her training sessions are structured, practical, and highly engaging for team members.',
+      quote: 'Your training sessions are structured, practical, and highly engaging for team members.',
       author: 'Training Coordinator',
+    },
+    {
+      quote: 'You are an excellent poetry reciter with confident and engaging stage presence.',
+      author: 'Cultural Program Coordinator',
     },
   ];
   const languages = [
@@ -317,6 +329,18 @@ export default function App() {
     return () => clearInterval(t);
   }, []);
 
+  // Gallery auto-slide — pauses when modal open
+  const galleryLengthRef = useRef(galleryItems.length);
+  useEffect(() => { galleryLengthRef.current = galleryItems.length; });
+
+  useEffect(() => {
+    if (isGalleryGridOpen) return;
+    const t = setInterval(() => {
+      setActiveGalleryIndex((prev) => (prev + 1) % galleryLengthRef.current);
+    }, 2000);
+    return () => clearInterval(t);
+  }, [isGalleryGridOpen]);
+
   // Skills animate on scroll
   useEffect(() => {
     if (!skillsVisible) return;
@@ -361,6 +385,17 @@ export default function App() {
     localStorage.setItem('cvDownloads', next);
   };
 
+  const navItems = [
+    { label: 'Services', id: 'services' },
+    { label: 'Projects', id: 'projects' },
+    { label: 'Gallery', id: 'gallery' },
+    { label: 'Experience', id: 'experience' },
+    { label: 'Credentials', id: 'certifications' },
+    { label: 'Education', id: 'education' },
+    { label: 'Language', id: 'languages' },
+    { label: 'FAQ', id: 'faq' },
+  ];
+
   return (
     <div className={`min-h-screen ${theme.bg} ${theme.text} font-sans transition-colors duration-300 selection:bg-[#738F8A] selection:text-white`}>
 
@@ -389,16 +424,7 @@ export default function App() {
           
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8 font-medium">
-            {[
-              { label: 'Services', id: 'services' },
-              { label: 'Projects', id: 'projects' },
-              { label: 'Gallery', id: 'gallery' },
-              { label: 'Experience', id: 'experience' },
-              { label: 'Credentials', id: 'certifications' },
-              { label: 'Education', id: 'education' },
-              { label: 'Language', id: 'languages' },
-              { label: 'FAQ', id: 'faq' },
-            ].map(({ label, id }, i) => (
+            {navItems.map(({ label, id }, i) => (
               <a
                 key={id}
                 href={`#${id}`}
@@ -430,14 +456,11 @@ export default function App() {
         {/* Mobile Nav Menu */}
         {isMobileMenuOpen && (
           <div className={`md:hidden absolute top-full left-0 w-full ${theme.bg} shadow-lg py-6 px-6 flex flex-col space-y-4 font-medium border-t ${theme.line}`}>
-            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="block hover:text-[#D7720C]">Services</a>
-            <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className="block hover:text-[#D7720C]">Projects</a>
-            <a href="#gallery" onClick={(e) => scrollToSection(e, 'gallery')} className="block hover:text-[#D7720C]">Gallery</a>
-            <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className="block hover:text-[#D7720C]">Experience</a>
-            <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className="block hover:text-[#D7720C]">Credentials</a>
-            <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className="block hover:text-[#D7720C]">Education</a>
-            <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className="block hover:text-[#D7720C]">Language</a>
-            <a href="#faq" onClick={(e) => scrollToSection(e, 'faq')} className="block hover:text-[#D7720C]">FAQ</a>
+            {navItems.map(({ label, id }) => (
+              <a key={id} href={`#${id}`} onClick={(e) => scrollToSection(e, id)} className="block hover:text-[#D7720C]">
+                {label}
+              </a>
+            ))}
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-full py-2 rounded-xl border ${theme.line}`}>
               {isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
             </button>
@@ -467,7 +490,10 @@ export default function App() {
           </h1>
           <h2 className={`text-xl md:text-2xl ${theme.accent} font-medium leading-relaxed max-w-2xl`}>
             Professional Client Coordinator & Lead Trainer. <br/>
-            <span className={theme.text}>I transform complex data and daily operations into clear, people-first workflows that teams can trust.</span>
+            <span className={theme.text}>
+              I transform complex data and daily operations into clear, people-first workflows that teams can trust.
+              {' '}Also skilled in poetry recitation and spoken presentation.
+            </span>
           </h2>
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center md:justify-start">
             <a href="mailto:mailboxofsuvra@gmail.com" className={`${accentCtaClass} px-8 py-4 rounded-full font-medium transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto justify-center`}>
@@ -680,12 +706,16 @@ export default function App() {
             onClick={() => setIsGalleryGridOpen(true)}
             className="relative w-full text-left group overflow-hidden"
           >
+            {isGalleryImageLoading && (
+              <div className="absolute inset-0 z-20 gallery-skeleton-shimmer" aria-hidden />
+            )}
             <img
               key={`gallery-main-${activeGalleryIndex}`}
               src={galleryItems[activeGalleryIndex].src}
               alt={galleryItems[activeGalleryIndex].title}
               className="h-[320px] md:h-[460px] w-full object-contain bg-[#0D2322]/5 gallery-fade-in"
               loading="lazy"
+              onLoad={() => setIsGalleryImageLoading(false)}
             />
             {/* Hover overlay */}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
@@ -772,21 +802,86 @@ export default function App() {
                   </li>
                 ))}
               </ul>
+              <p className={`mt-6 text-xs font-bold tracking-widest uppercase ${theme.primaryText}`}>Additional Skills</p>
+              <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {additionalSkills.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#D7720C]"></span>
+                    <span className={theme.mutedText}>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
           <div className={`${theme.cardBg} rounded-3xl p-8 border ${theme.line} shadow-sm flex flex-col`}>
-            <h3 className="text-3xl font-bold mb-6">Testimonials</h3>
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="text-3xl font-bold">Testimonials</h3>
+              <div
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide ${
+                  isDarkMode ? 'border-[#436661] bg-[#193433] text-[#A6B8B4]' : 'border-[#CAD6D3] bg-[#F5F7F6] text-[#5E6F6B]'
+                }`}
+              >
+                <span className="h-2 w-2 rounded-full bg-[#00AFF0] shadow-[0_0_0_4px_rgba(0,175,240,0.2)]" />
+                Live chat
+              </div>
+            </div>
             {/* min-h: absolute blockquotes don't contribute to height — without this the carousel collapses on mobile */}
-            <div className="relative min-h-[260px] flex-1 overflow-hidden sm:min-h-[280px]">
+            <div className={`relative min-h-[300px] flex-1 overflow-hidden rounded-2xl border p-4 sm:min-h-[320px] sm:p-5 ${
+              isDarkMode ? 'border-[#214654]/70 bg-[#071B24]' : 'border-[#CFE8F7] bg-[#F4FAFF]'
+            }`}>
               {testimonials.map((item, idx) => (
                 <blockquote
                   key={item.author}
-                  className={`absolute inset-0 flex flex-col rounded-2xl p-5 ${theme.softCard} transition-all duration-500 ${
+                  className={`absolute inset-0 flex flex-col gap-3 p-4 transition-all duration-500 sm:p-5 ${
                     idx === testimonialIdx ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
                   }`}
                 >
-                  <p className="leading-relaxed text-lg">"{item.quote}"</p>
-                  <footer className={`mt-4 shrink-0 text-sm font-semibold ${theme.primaryText}`}>— {item.author}</footer>
+                  <div className="flex items-center gap-3">
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                      isDarkMode ? 'bg-[#4F46E5] text-white' : 'bg-[#4F46E5] text-white'
+                    }`}>
+                      {item.author.charAt(0)}
+                    </span>
+                    <div>
+                      <p className={`text-sm font-semibold ${theme.text}`}>{item.author}</p>
+                      <p className={`text-xs ${theme.mutedText}`}>Online</p>
+                    </div>
+                  </div>
+
+                  <div className={`facetime-bubble-left relative max-w-[44%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-sm ${
+                    isDarkMode ? 'bg-[#143040] text-[#DDEAF3]' : 'bg-white text-[#123247]'
+                  }`}>
+                    Hi
+                  </div>
+
+                  <div className="flex justify-end">
+                    <div className={`facetime-bubble-right relative max-w-[48%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-sm ${
+                      isDarkMode ? 'bg-[#00AFF0] text-white' : 'bg-[#00AFF0] text-white'
+                    }`}>
+                      Hello!
+                    </div>
+                  </div>
+
+                  <div className={`facetime-bubble-left relative max-w-[92%] rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm ${
+                    isDarkMode ? 'bg-[#143040] text-[#EAF1EF]' : 'bg-white text-[#0D2322]'
+                  }`}>
+                    "{item.quote}"
+                    <span
+                      className={`absolute -top-3 right-2 rounded-full px-2 py-0.5 text-[11px] ${
+                        isDarkMode ? 'bg-[#2B1D2D] text-[#FF8CC6]' : 'bg-[#FFE4EF] text-[#C2185B]'
+                      }`}
+                    >
+                      ❤️
+                    </span>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <div className={`facetime-bubble-right relative max-w-[82%] rounded-2xl px-4 py-2 text-xs font-medium shadow-sm ${
+                      isDarkMode ? 'bg-[#00AFF0] text-white' : 'bg-[#00AFF0] text-white'
+                    }`}>
+                      Thank you! Really appreciate your feedback.
+                    </div>
+                  </div>
                 </blockquote>
               ))}
             </div>
