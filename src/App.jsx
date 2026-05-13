@@ -52,11 +52,14 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [showBackTop, setShowBackTop] = useState(false);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
-  const [cvDownloads, setCvDownloads] = useState(() => parseInt(localStorage.getItem('cvDownloads') || '0'));
   const [skillsVisible, setSkillsVisible] = useState(false);
   const [animatedSkills, setAnimatedSkills] = useState([0, 0, 0, 0]);
-  const [cursorPos, setCursorPos] = useState({ x: -200, y: -200 });
-  const [cursorHover, setCursorHover] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.removeItem('cvDownloads');
+    } catch {}
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('darkMode', isDarkMode);
@@ -364,27 +367,6 @@ export default function App() {
     return () => obs.disconnect();
   }, []);
 
-  // Custom cursor
-  useEffect(() => {
-    const move = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
-    const over = (e) => { if (e.target.closest('a,button,[role="button"]')) setCursorHover(true); };
-    const out  = ()  => setCursorHover(false);
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseover', over);
-    window.addEventListener('mouseout', out);
-    return () => {
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('mouseover', over);
-      window.removeEventListener('mouseout', out);
-    };
-  }, []);
-
-  const handleCvDownload = () => {
-    const next = cvDownloads + 1;
-    setCvDownloads(next);
-    localStorage.setItem('cvDownloads', next);
-  };
-
   const navItems = [
     { label: 'Services', id: 'services' },
     { label: 'Projects', id: 'projects' },
@@ -501,20 +483,13 @@ export default function App() {
               Let's talk
             </a>
             
-            {/* Ekhane button er bodole anchor tag deya holo jate CV download hoy */}
             <a
               href={cvFile}
               download="Suvadra_Kundu_CV.pdf"
-              onClick={handleCvDownload}
-              className={`relative bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
+              className={`bg-transparent border-2 ${isDarkMode ? 'border-[#EAF1EF]' : 'border-[#0D2322]'} ${theme.text} px-8 py-4 rounded-full font-medium ${isDarkMode ? 'hover:bg-[#EAF1EF] hover:text-[#0D2322]' : 'hover:bg-[#0D2322] hover:text-[#F5F4ED]'} transition-all flex items-center gap-2 w-full sm:w-auto justify-center`}
             >
               <Download size={20} />
               Download CV
-              {cvDownloads > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#D7720C] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cvDownloads}
-                </span>
-              )}
             </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
