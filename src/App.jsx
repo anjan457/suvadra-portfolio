@@ -297,7 +297,7 @@ export default function App() {
 
     const maxBody = 1200;
     if (message.length > maxBody) {
-      message = `${message.slice(0, maxBody)}\n\n[Message shortened — please email directly if you need to send more.]`;
+      message = `${message.slice(0, maxBody)}\n\n[Message shortened — email directly if you need to send more.]`;
     }
 
     const subject = `Portfolio quick message from ${name}`;
@@ -342,7 +342,7 @@ export default function App() {
     if (isGalleryGridOpen) return;
     const t = setInterval(() => {
       setActiveGalleryIndex((prev) => (prev + 1) % galleryLengthRef.current);
-    }, 2000);
+    }, 5000);
     return () => clearInterval(t);
   }, [isGalleryGridOpen]);
 
@@ -1112,8 +1112,8 @@ export default function App() {
                   Send Message
                 </button>
                 {isFormSent && (
-                  <p className="text-xs text-[#9fd3ad]">
-                    Gmail compose খুলেছে। সেখানে Send চাপলে মেইলটি {CONTACT_EMAIL} ঠিকানায় চলে যাবে।
+                  <p className="text-xs text-[#9fd3ad] leading-relaxed">
+                    Gmail compose খুলেছে — Send চাপলে মেইল {CONTACT_EMAIL} এ চলে যাবে।
                   </p>
                 )}
               </form>
