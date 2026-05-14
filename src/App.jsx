@@ -38,6 +38,8 @@ const quickStats = [
   { label: 'Projects Coordinated', value: 150, suffix: '+' },
 ];
 
+const CONTACT_EMAIL = 'mailboxofsuvra@gmail.com';
+
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -284,32 +286,32 @@ export default function App() {
     setActiveGalleryIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
   };
 
-  const encodeForm = (data) =>
-    Object.keys(data)
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-      .join('&');
-
-  const handleContactSubmit = async (e) => {
+  const handleContactSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const payload = {};
-    formData.forEach((value, key) => {
-      payload[key] = value;
-    });
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    let message = String(formData.get('message') || '').trim();
+    if (!name || !email || !message) return;
 
-    try {
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encodeForm(payload),
-      });
-      form.reset();
-      setIsFormSent(true);
-      setTimeout(() => setIsFormSent(false), 3500);
-    } catch (error) {
-      setIsFormSent(false);
+    const maxBody = 1200;
+    if (message.length > maxBody) {
+      message = `${message.slice(0, maxBody)}\n\n[Message shortened — please email directly if you need to send more.]`;
     }
+
+    const subject = `Portfolio quick message from ${name}`;
+    const body = `Name: ${name}\nReply-to: ${email}\n\nMessage:\n${message}`;
+    const gmailUrl =
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}` +
+      `&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    const opened = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+    if (!opened) window.location.href = gmailUrl;
+
+    form.reset();
+    setIsFormSent(true);
+    setTimeout(() => setIsFormSent(false), 5000);
   };
 
   useEffect(() => {
@@ -800,14 +802,16 @@ export default function App() {
                 Live chat
               </div>
             </div>
-            {/* min-h: absolute blockquotes don't contribute to height — without this the carousel collapses on mobile */}
-            <div className={`relative min-h-[300px] flex-1 overflow-hidden rounded-2xl border p-4 sm:min-h-[320px] sm:p-5 ${
-              isDarkMode ? 'border-[#214654]/70 bg-[#071B24]' : 'border-[#CFE8F7] bg-[#F4FAFF]'
-            }`}>
+            {/* min-h + pt: absolute slides don't grow the box; overflow clips long quotes / bubble badges on mobile */}
+            <div
+              className={`relative min-h-[32rem] flex-1 overflow-x-hidden overflow-y-hidden rounded-2xl border px-4 pb-5 pt-8 sm:min-h-[28rem] sm:px-5 sm:pb-5 sm:pt-9 lg:min-h-[26rem] ${
+                isDarkMode ? 'border-[#214654]/70 bg-[#071B24]' : 'border-[#CFE8F7] bg-[#F4FAFF]'
+              }`}
+            >
               {testimonials.map((item, idx) => (
                 <blockquote
                   key={item.author}
-                  className={`absolute inset-0 flex flex-col gap-3 p-4 transition-all duration-500 sm:p-5 ${
+                  className={`absolute inset-0 flex min-h-full flex-col gap-3 overflow-y-auto overscroll-contain px-4 pb-4 pt-3 transition-all duration-500 sm:px-5 sm:pb-5 sm:pt-4 ${
                     idx === testimonialIdx ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
                   }`}
                 >
@@ -1099,20 +1103,7 @@ export default function App() {
 
             <div>
               <h3 className="text-2xl font-bold mb-4">Quick Message</h3>
-              <form
-                name="quick-message"
-                method="POST"
-                data-netlify="true"
-                netlify-honeypot="bot-field"
-                onSubmit={handleContactSubmit}
-                className="space-y-3"
-              >
-                <input type="hidden" name="form-name" value="quick-message" />
-                <p className="hidden">
-                  <label>
-                    Do not fill this if you are human: <input name="bot-field" />
-                  </label>
-                </p>
+              <form onSubmit={handleContactSubmit} className="space-y-3">
                 <input name="name" required placeholder="Your name" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
                 <input name="email" required type="email" placeholder="Your email" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]" />
                 <textarea name="message" required rows={3} placeholder="Your message" className="w-full rounded-xl bg-[#1A3332] border border-[#738F8A]/30 px-4 py-3 outline-none focus:border-[#D7720C]"></textarea>
@@ -1120,7 +1111,11 @@ export default function App() {
                   <Send size={18} />
                   Send Message
                 </button>
-                {isFormSent && <p className="text-xs text-[#9fd3ad]">Message sent successfully. Thank you.</p>}
+                {isFormSent && (
+                  <p className="text-xs text-[#9fd3ad]">
+                    Gmail compose খুলেছে। সেখানে Send চাপলে মেইলটি {CONTACT_EMAIL} ঠিকানায় চলে যাবে।
+                  </p>
+                )}
               </form>
             </div>
           </div>
